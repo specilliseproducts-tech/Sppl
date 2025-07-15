@@ -52,10 +52,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="max-w-md w-full space-y-8 p-8 bg-card rounded-lg shadow-md">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-card-foreground">
             Create your account
           </h2>
         </div>
@@ -112,7 +112,7 @@ export default function SignUpPage() {
           </div>
 
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <div className="text-destructive text-sm text-center">{error}</div>
           )}
 
           <div>
@@ -122,11 +122,11 @@ export default function SignUpPage() {
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
               <Link
                 href="/auth/signin"
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-primary hover:text-primary-hover"
               >
                 Sign in
               </Link>

@@ -11,14 +11,17 @@ interface LayoutWrapperProps {
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith('/dashboard');
+  const isAuthPage = pathname.startsWith('/auth');
+
+  const shouldHideNavbar = isDashboard || isAuthPage;
 
   return (
     <>
-      {!isDashboard && <Navbar />}
-      <main className={`min-h-screen ${!isDashboard ? 'pt-16' : ''}`}>
+      {!shouldHideNavbar && <Navbar />}
+      <main className={`min-h-screen ${!shouldHideNavbar ? 'pt-16' : ''}`}>
         {children}
       </main>
-      {!isDashboard && <Footer />}
+      {!shouldHideNavbar && <Footer />}
     </>
   );
 }
