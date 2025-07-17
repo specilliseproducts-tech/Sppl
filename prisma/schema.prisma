@@ -93,6 +93,7 @@ model Product {
   applications    String[]
   modelPath       String
   imagePath       String
+  images          String[]
   color           String
   category        String
   brochureUrl     String

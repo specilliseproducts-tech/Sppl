@@ -1,45 +1,73 @@
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
-import { ChevronRight, ChevronLeft, Check, Download } from "lucide-react"
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ChevronRight, ChevronLeft, Check, Download } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import ScrollReveal from "@/components/scroll-reveal"
-import ProductShowcaseSingleWrapper from "@/components/product-showcase/product-showcase-single-wrapper"
-import { products } from "@/lib/constants"
+import { Button } from '@/components/ui/button';
+import ScrollReveal from '@/components/scroll-reveal';
+import ProductShowcaseSingleWrapper from '@/components/product-showcase/product-showcase-single-wrapper';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = products.find((p) => p.slug === params.slug)
+// Helper to fetch a product by slug from the API
+async function fetchProductBySlug(slug: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/products/slug/${slug}`,
+    { cache: 'no-store' },
+  );
+  if (!res.ok) return null;
+  return res.json();
+}
 
+// Helper to fetch all products (for static params)
+async function fetchAllProducts() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/products`,
+    { cache: 'no-store' },
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.items || [];
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const product = await fetchProductBySlug(params.slug);
   if (!product) {
     return {
-      title: "Product Not Found | Spécialisé Products",
-    }
+      title: 'Product Not Found | Spécialisé Products',
+    };
   }
-
   return {
     title: `${product.name} | Spécialisé Products`,
     description: product.shortDescription,
-  }
+  };
 }
 
 export async function generateStaticParams() {
-  return products.map((product) => ({
+  const products = await fetchAllProducts();
+  return products.map((product: any) => ({
     slug: product.slug,
-  }))
+  }));
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = products.find((p) => p.slug === params.slug)
-
+export default async function ProductPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const product = await fetchProductBySlug(params.slug);
   if (!product) {
-    notFound()
+    notFound();
   }
 
-  // Find next and previous products for navigation
-  const currentIndex = products.findIndex((p) => p.slug === params.slug)
-  const prevProduct = currentIndex > 0 ? products[currentIndex - 1] : null
-  const nextProduct = currentIndex < products.length - 1 ? products[currentIndex + 1] : null
+  // Fetch all products for navigation
+  const products = await fetchAllProducts();
+  const currentIndex = products.findIndex((p: any) => p.slug === params.slug);
+  const prevProduct = currentIndex > 0 ? products[currentIndex - 1] : null;
+  const nextProduct =
+    currentIndex < products.length - 1 ? products[currentIndex + 1] : null;
 
   return (
     <>
@@ -47,8 +75,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-accent/20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">{product.name}</h1>
-            <p className="text-xl text-muted-foreground mb-8">{product.shortDescription}</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+              {product.name}
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              {product.shortDescription}
+            </p>
             <Button asChild variant="default" size="lg" className="group">
               <Link href={product.brochureUrl} target="_blank" download>
                 <Download className="mr-2 h-5 w-5" />
@@ -68,20 +100,26 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <ScrollReveal direction="left">
               <div>
-                <h2 className="text-3xl font-bold text-primary mb-6">Overview</h2>
+                <h2 className="text-3xl font-bold text-primary mb-6">
+                  Overview
+                </h2>
                 <div className="text-muted-foreground space-y-4">
-                  {product.description.split("\n\n").map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
+                  {product.description
+                    .split('\n\n')
+                    .map((paragraph: string, index: number) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal direction="right">
               <div className="bg-background p-6 rounded-xl">
-                <h2 className="text-3xl font-bold text-primary mb-6">Key Features</h2>
+                <h2 className="text-3xl font-bold text-primary mb-6">
+                  Key Features
+                </h2>
                 <ul className="space-y-3">
-                  {product.features.map((feature, index) => (
+                  {product.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-start">
                       <Check className="h-5 w-5 text-secondary shrink-0 mr-3 mt-1" />
                       <span className="text-muted-foreground">{feature}</span>
@@ -98,17 +136,19 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <section className="w-full py-20 bg-background">
         <div className="container mx-auto px-4">
           <ScrollReveal>
-            <h2 className="text-3xl font-bold text-primary mb-8 text-center">Product Gallery</h2>
+            <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+              Product Gallery
+            </h2>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
+            {[0, 1, 2].map((i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
                   <div className="aspect-video relative">
                     <Image
-                      src={`/placeholder.svg?height=400&width=600&text=Image+${i}`}
-                      alt={`${product.name} - Image ${i}`}
+                      src={product.imagePath}
+                      alt={`${product.name} - Image`}
                       fill
                       className="object-cover"
                     />
@@ -124,14 +164,18 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <section className="w-full py-20 bg-card">
         <div className="container mx-auto px-4">
           <ScrollReveal>
-            <h2 className="text-3xl font-bold text-primary mb-8 text-center">Applications</h2>
+            <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+              Applications
+            </h2>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {product.applications.map((application, index) => (
+            {product.applications.map((application: string, index: number) => (
               <ScrollReveal key={index} delay={index * 0.1}>
                 <div className="bg-background p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <h3 className="text-xl font-bold text-primary mb-3">{application}</h3>
+                  <h3 className="text-xl font-bold text-primary mb-3">
+                    {application}
+                  </h3>
                 </div>
               </ScrollReveal>
             ))}
@@ -143,7 +187,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       <section className="w-full py-20 bg-background">
         <div className="container mx-auto px-4">
           <ScrollReveal>
-            <h2 className="text-3xl font-bold text-primary mb-8 text-center">Technical Specifications</h2>
+            <h2 className="text-3xl font-bold text-primary mb-8 text-center">
+              Technical Specifications
+            </h2>
           </ScrollReveal>
 
           <div className="max-w-3xl mx-auto bg-card p-6 rounded-xl">
@@ -157,12 +203,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 <div className="text-muted-foreground">{product.category}</div>
               </div>
               {/* Add more specifications as needed */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border-b border-muted">
-                <div className="font-semibold text-foreground">Warranty</div>
-                <div className="text-muted-foreground">2 years (Standard)</div>
-              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <div className="font-semibold text-foreground">Documentation</div>
+                <div className="font-semibold text-foreground">
+                  Documentation
+                </div>
                 <div className="text-muted-foreground">
                   <Button asChild variant="outline" size="sm" className="group">
                     <Link href={product.brochureUrl} target="_blank" download>
@@ -213,13 +258,24 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       {/* CTA Section */}
       <section className="w-full py-20 bg-gradient-to-br from-primary/20 to-accent/20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">Interested in this Product?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
+            Interested in this Product?
+          </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-            Contact us to learn more about the {product.name} and how it can benefit your operations.
+            Contact us to learn more about the {product.name} and how it can
+            benefit your operations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="group">
-              <Link href="/contact">
+              <Link
+                href={`/contact?message=${encodeURIComponent(
+                  `Hey , I'm interested in this product - ${
+                    process.env.NEXT_PUBLIC_BASE_URL
+                      ? process.env.NEXT_PUBLIC_BASE_URL
+                      : ''
+                  }/products/${product.slug}\nLet's connect`,
+                )}`}
+              >
                 Get in Touch
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
               </Link>
@@ -234,5 +290,5 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         </div>
       </section>
     </>
-  )
+  );
 }
