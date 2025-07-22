@@ -220,3 +220,128 @@ export function useDeleteProduct() {
     },
   });
 }
+
+// Contact Forms hooks
+export function useContactForms(
+  params?: PaginationParams & { search?: string },
+) {
+  return useQuery({
+    queryKey: ['contact-forms', params],
+    queryFn: () => apiClient.getContactForms(params),
+    select: (data) => (data.success ? data.data : null),
+  });
+}
+
+export function useContactForm(id: string) {
+  return useQuery({
+    queryKey: ['contact-forms', id],
+    queryFn: () => apiClient.getContactForm(id),
+    select: (data) => (data.success ? data.data : null),
+  });
+}
+
+export function useCreateContactForm() {
+  return useMutation({
+    mutationFn: (data: {
+      name: string;
+      email: string;
+      phone: string;
+      subject: string;
+      message: string;
+    }) => apiClient.createContactForm(data),
+    onSuccess: (response) => {
+      if (response.success) {
+        toast({
+          title: 'Success',
+          description:
+            'Message sent successfully! We will get back to you soon.',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to send message',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to send message',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useUpdateContactForm() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<{
+        name: string;
+        email: string;
+        phone: string;
+        subject: string;
+        message: string;
+      }>;
+    }) => apiClient.updateContactForm(id, data),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['contact-forms'] });
+        toast({
+          title: 'Success',
+          description: 'Contact form updated successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to update contact form',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update contact form',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useDeleteContactForm() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.deleteContactForm(id),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['contact-forms'] });
+        toast({
+          title: 'Success',
+          description: 'Contact form deleted successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to delete contact form',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete contact form',
+        variant: 'destructive',
+      });
+    },
+  });
+}

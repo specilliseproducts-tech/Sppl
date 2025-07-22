@@ -66,8 +66,8 @@ const items = [
     icon: Users,
   },
   {
-    title: 'Contact Form',
-    url: '/dashboard/contact-form',
+    title: 'Contact Forms',
+    url: '/dashboard/contact-forms',
     icon: Phone,
   },
 ];

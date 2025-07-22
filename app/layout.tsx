@@ -5,6 +5,7 @@ import './globals.css';
 
 import PageTransition from '@/components/page-transition';
 import LayoutWrapper from '@/components/layout-wrapper';
+import { Providers } from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <PageTransition>
-          <LayoutWrapper>{children}</LayoutWrapper>
-        </PageTransition>
+        <Providers>
+          <PageTransition>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </PageTransition>
+        </Providers>
       </body>
     </html>
   );

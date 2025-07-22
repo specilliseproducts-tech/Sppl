@@ -145,6 +145,68 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
+  // Contact Form methods
+  async getContactForms(params?: PaginationParams & { search?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.perPage)
+      searchParams.append('limit', params.perPage.toString());
+    if (params?.search) searchParams.append('search', params.search);
+
+    const query = searchParams.toString();
+    return this.request<{
+      contactForms: any[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        pages: number;
+      };
+    }>(`/contact-forms${query ? `?${query}` : ''}`);
+  }
+
+  async getContactForm(id: string) {
+    return this.request<{ contactForm: any }>(`/contact-forms/${id}`);
+  }
+
+  async createContactForm(data: {
+    name: string;
+    email: string;
+    phone: string;
+    subject: string;
+    message: string;
+  }) {
+    return this.request<{ id: string; message: string }>('/contact-forms', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateContactForm(
+    id: string,
+    data: Partial<{
+      name: string;
+      email: string;
+      phone: string;
+      subject: string;
+      message: string;
+    }>,
+  ) {
+    return this.request<{ contactForm: any; message: string }>(
+      `/contact-forms/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      },
+    );
+  }
+
+  async deleteContactForm(id: string) {
+    return this.request<{ message: string }>(`/contact-forms/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
