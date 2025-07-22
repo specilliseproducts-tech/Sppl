@@ -7,53 +7,21 @@ import { ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import ScrollReveal from "@/components/scroll-reveal"
+import { useGalleryItems } from "@/hooks/use-queries"
+import { galleryCategories } from "@/lib/constants"
+import type { GallerySelect } from "@/app/dashboard/gallery/schema"
 
 export default function GalleryClientPage() {
-  // Sample gallery categories
-  const categories = [
-    { id: "products", name: "Products" },
-    { id: "installations", name: "Installations" },
-    { id: "events", name: "Events" },
-    { id: "team", name: "Team" },
-  ]
-
   // State to track active category
-  const [activeCategory, setActiveCategory] = useState("products")
+  const [activeCategory, setActiveCategory] = useState("Products")
 
-  // Sample gallery items with categories
-  const galleryItems = [
-    ...Array.from({ length: 4 }).map((_, i) => ({
-      id: `product-${i}`,
-      category: "products",
-      title: `Product ${i + 1}`,
-      subtitle: "Product Category",
-      image: `/placeholder.svg?height=600&width=800&text=Product+Image+${i + 1}`,
-    })),
-    ...Array.from({ length: 3 }).map((_, i) => ({
-      id: `installation-${i}`,
-      category: "installations",
-      title: `Installation ${i + 1}`,
-      subtitle: "Client Installation",
-      image: `/placeholder.svg?height=600&width=800&text=Installation+Image+${i + 1}`,
-    })),
-    ...Array.from({ length: 3 }).map((_, i) => ({
-      id: `event-${i}`,
-      category: "events",
-      title: `Event ${i + 1}`,
-      subtitle: "Company Event",
-      image: `/placeholder.svg?height=600&width=800&text=Event+Image+${i + 1}`,
-    })),
-    ...Array.from({ length: 2 }).map((_, i) => ({
-      id: `team-${i}`,
-      category: "team",
-      title: `Team Activity ${i + 1}`,
-      subtitle: "Team Building",
-      image: `/placeholder.svg?height=600&width=800&text=Team+Image+${i + 1}`,
-    })),
-  ]
+  // Fetch gallery items with category filter
+  const { data: galleryData, isLoading } = useGalleryItems({
+    category: activeCategory,
+    perPage: 50, // Adjust based on needs
+  })
 
-  // Filter gallery items by active category
-  const filteredItems = galleryItems.filter((item) => item.category === activeCategory)
+  const galleryItems = galleryData?.galleryItems || []
 
   return (
     <>
@@ -73,12 +41,12 @@ export default function GalleryClientPage() {
       <section className="w-full py-12 bg-card">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
+            {galleryCategories.map((category) => (
               <Button
                 key={category.id}
-                variant={category.id === activeCategory ? "default" : "outline"}
+                variant={category.name === activeCategory ? "default" : "outline"}
                 className="min-w-[120px]"
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => setActiveCategory(category.name)}
               >
                 {category.name}
               </Button>
@@ -90,14 +58,22 @@ export default function GalleryClientPage() {
       {/* Gallery Grid */}
       <section className="w-full py-20 bg-background">
         <div className="container mx-auto px-4">
-          {filteredItems.length > 0 ? (
+          {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredItems.map((item, i) => (
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-card rounded-xl overflow-hidden shadow-md animate-pulse">
+                  <div className="aspect-[4/3] bg-muted"></div>
+                </div>
+              ))}
+            </div>
+          ) : galleryItems.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {galleryItems.map((item: GallerySelect, i: number) => (
                 <ScrollReveal key={item.id} delay={i * 0.05}>
                   <div className="group relative bg-card rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
                     <div className="aspect-[4/3] relative">
                       <Image
-                        src={item.image || "/placeholder.svg"}
+                        src={item.imagePath || "/placeholder.svg"}
                         alt={item.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -116,12 +92,14 @@ export default function GalleryClientPage() {
           ) : (
             <div className="text-center py-12">
               <h3 className="text-xl font-bold text-primary mb-2">No items found</h3>
-              <p className="text-muted-foreground">No gallery items available for this category yet.</p>
+              <p className="text-muted-foreground">
+                No gallery items available for {activeCategory} category yet.
+              </p>
             </div>
           )}
 
           {/* Load More Button */}
-          {filteredItems.length > 0 && (
+          {galleryItems.length > 0 && !isLoading && (
             <div className="mt-12 text-center">
               <Button variant="outline" size="lg">
                 Load More

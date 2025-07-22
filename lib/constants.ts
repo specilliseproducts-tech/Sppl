@@ -1,10 +1,22 @@
+// Gallery categories
+export const galleryCategories = [
+  { id: 'Office', name: 'Office' },
+  { id: 'Team', name: 'Team' },
+  { id: 'Products', name: 'Products' },
+  { id: 'Technology', name: 'Technology' },
+];
+
+// Gallery category list for form dropdowns (string array for backward compatibility)
+export const galleryCategoryList = galleryCategories.map((cat) => cat.name);
+
 // Product data
 export const products = [
   {
-    id: "microchannel",
-    slug: "microchannel-fabrication-machine",
-    name: "Microchannel Fabrication Machine",
-    shortDescription: "Handheld machine for metallic and silicon substrate with ≤ 100 µm microchannel width and depth.",
+    id: 'microchannel',
+    slug: 'microchannel-fabrication-machine',
+    name: 'Microchannel Fabrication Machine',
+    shortDescription:
+      'Handheld machine for metallic and silicon substrate with ≤ 100 µm microchannel width and depth.',
     description: `
       Our Microchannel Fabrication Machine is a state-of-the-art handheld device designed for precision microchannel creation in metallic and silicon substrates.
       
@@ -15,34 +27,38 @@ export const products = [
       Air-cooled and with optional battery operation, this maintenance-free system offers low energy consumption and an impressive service life of ≥ 1,00,000 hours, backed by our standard 2-year warranty.
     `,
     features: [
-      "≤ 100 µm Microchannel width and depth",
-      "Handheld Machine suitable for Metallic and Silicon substrate",
-      "Substrate size could be 100 * 100 mm",
-      "Pulse Fiber Laser based System",
-      "Compact and Non-Contact Microchannel Fabrication",
-      "Integrated Touchscreen",
-      "Weight of the Fabrication Head is less than 4 kgs",
-      "Weight of the Machine including Head and the Box is < 15 kgs",
-      "Excellent precision and accuracy",
-      "Air cooled with optional battery operation",
-      "Service life ≥ 1,00,000 hours",
-      "Red alignment Laser",
-      "Maintenance free with low energy consumption",
-      "Warranty 2 years (Standard)",
+      '≤ 100 µm Microchannel width and depth',
+      'Handheld Machine suitable for Metallic and Silicon substrate',
+      'Substrate size could be 100 * 100 mm',
+      'Pulse Fiber Laser based System',
+      'Compact and Non-Contact Microchannel Fabrication',
+      'Integrated Touchscreen',
+      'Weight of the Fabrication Head is less than 4 kgs',
+      'Weight of the Machine including Head and the Box is < 15 kgs',
+      'Excellent precision and accuracy',
+      'Air cooled with optional battery operation',
+      'Service life ≥ 1,00,000 hours',
+      'Red alignment Laser',
+      'Maintenance free with low energy consumption',
+      'Warranty 2 years (Standard)',
     ],
-    applications: ["Microchannel mould Fabrication", "Useful for Field use (on site)", "Easily transportable"],
-    modelPath: "/models/laser-machine.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#E84118", // Orange-red from logo
-    category: "Laser Systems",
-    brochureUrl: "/brochures/microchannel-fabrication-machine.pdf", // Add this line
+    applications: [
+      'Microchannel mould Fabrication',
+      'Useful for Field use (on site)',
+      'Easily transportable',
+    ],
+    modelPath: '/models/laser-machine.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#E84118', // Orange-red from logo
+    category: 'Laser Systems',
+    brochureUrl: '/brochures/microchannel-fabrication-machine.pdf', // Add this line
   },
   {
-    id: "alestm",
-    slug: "alestm-system",
-    name: "ALESTM System",
+    id: 'alestm',
+    slug: 'alestm-system',
+    name: 'ALESTM System',
     shortDescription:
-      "Automatic Laser Exposure, Scanning & Temperature Mapping System for non-contact sample heating and thermal mapping.",
+      'Automatic Laser Exposure, Scanning & Temperature Mapping System for non-contact sample heating and thermal mapping.',
     description: `
       ALESTM (Automatic Laser Exposure, Scanning & Temperature Mapping) System is an upgraded version of VDP-LES and can be used for many applications e.g. Non Contact method of sample heating and Thermal Mapping during the heating process and afterwards, in addition to Photo Thermal Studies.
 
@@ -55,30 +71,36 @@ export const products = [
       Thermal Mapping of the exposed sample includes temperature palettes for both video and images, with temperature data from each pixel exportable to Excel for further analysis.
     `,
     features: [
-      "Non-contact sample heating method",
-      "Thermal mapping during and after heating process",
-      "Variable laser power density",
-      "Support for live animal samples (Mice, Rat, Rabbit)",
-      "Micro well plate and petri dish compatibility",
-      "Customizable exposure time and location",
-      "User-friendly GUI with built-in error prevention",
-      "Near Infra-Red (NIR) Fiber Coupled Laser",
-      "Multiple laser support (one at a time)",
-      "Temperature data export to Excel",
-      "Video and image thermal mapping with temperature palette",
+      'Non-contact sample heating method',
+      'Thermal mapping during and after heating process',
+      'Variable laser power density',
+      'Support for live animal samples (Mice, Rat, Rabbit)',
+      'Micro well plate and petri dish compatibility',
+      'Customizable exposure time and location',
+      'User-friendly GUI with built-in error prevention',
+      'Near Infra-Red (NIR) Fiber Coupled Laser',
+      'Multiple laser support (one at a time)',
+      'Temperature data export to Excel',
+      'Video and image thermal mapping with temperature palette',
     ],
-    applications: ["Photo Thermal Studies", "Biomedical Research", "Material Science", "Thermal Analysis"],
-    modelPath: "/models/scanner.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#4834D4", // Blue-purple from logo
-    category: "Thermal Mapping Systems",
-    brochureUrl: "/brochures/alestm-system.pdf", // Add this line
+    applications: [
+      'Photo Thermal Studies',
+      'Biomedical Research',
+      'Material Science',
+      'Thermal Analysis',
+    ],
+    modelPath: '/models/scanner.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#4834D4', // Blue-purple from logo
+    category: 'Thermal Mapping Systems',
+    brochureUrl: '/brochures/alestm-system.pdf', // Add this line
   },
   {
-    id: "laser-marking",
-    slug: "laser-marking-cutting-machine",
-    name: "Laser Marking & Cutting Machine",
-    shortDescription: "Fully customizable marking, engraving & cutting machine based on Fibre or CO2 Laser.",
+    id: 'laser-marking',
+    slug: 'laser-marking-cutting-machine',
+    name: 'Laser Marking & Cutting Machine',
+    shortDescription:
+      'Fully customizable marking, engraving & cutting machine based on Fibre or CO2 Laser.',
     description: `
       SPPL designs and manufactures Laser Marking, Engraving & Cutting Machines that are fully customizable, based on Fibre or CO2 Laser technology. Our systems offer material options to choose while ordering (factory set) – including Metals, Acrylic, Leather, Textile, Glass, and more.
 
@@ -87,33 +109,34 @@ export const products = [
       Each machine comes with an integrated cooling system and an exhaust system for optimal performance and safety. Our laser systems deliver precise, high-quality results across a wide range of applications and materials.
     `,
     features: [
-      "Available in Fibre or CO2 Laser options",
-      "Power range from 20W to 2000W",
-      "Customizable sample size",
-      "Anodized MS construction for stability",
-      "Vibration protection for better quality",
-      "Built-in cooling system",
-      "Integrated exhaust system",
-      "Compatible with various materials (Metals, Acrylic, Leather, Textile, Glass, etc.)",
+      'Available in Fibre or CO2 Laser options',
+      'Power range from 20W to 2000W',
+      'Customizable sample size',
+      'Anodized MS construction for stability',
+      'Vibration protection for better quality',
+      'Built-in cooling system',
+      'Integrated exhaust system',
+      'Compatible with various materials (Metals, Acrylic, Leather, Textile, Glass, etc.)',
     ],
     applications: [
-      "Industrial marking and engraving",
-      "Product identification",
-      "Decorative cutting",
-      "Prototype development",
-      "Small-scale manufacturing",
+      'Industrial marking and engraving',
+      'Product identification',
+      'Decorative cutting',
+      'Prototype development',
+      'Small-scale manufacturing',
     ],
-    modelPath: "/models/cutter.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#E84118", // Orange-red from logo
-    category: "Laser Systems",
-    brochureUrl: "/brochures/laser-marking-cutting-machine.pdf", // Add this line
+    modelPath: '/models/cutter.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#E84118', // Orange-red from logo
+    category: 'Laser Systems',
+    brochureUrl: '/brochures/laser-marking-cutting-machine.pdf', // Add this line
   },
   {
-    id: "3d-printer",
-    slug: "3d-fff-fdm-printer",
-    name: "3D FFF and FDM Printers",
-    shortDescription: "3D printing solutions with customizable build volumes and high temperature capabilities.",
+    id: '3d-printer',
+    slug: '3d-fff-fdm-printer',
+    name: '3D FFF and FDM Printers',
+    shortDescription:
+      '3D printing solutions with customizable build volumes and high temperature capabilities.',
     description: `
       SPPL designs and manufactures FUSED FILAMENT FABRICATION (FFF) / FUSED DEPOSITION MODEL (FDM) 3D Printers with build volumes ranging from 300x300x300 mm to 500x500x500 mm.
 
@@ -122,32 +145,33 @@ export const products = [
       These versatile 3D printers deliver exceptional precision and reliability for prototyping, manufacturing, and research applications.
     `,
     features: [
-      "Build volume from 300x300x300 mm to 500x500x500 mm",
-      "Nozzle temperature up to 330°C",
-      "Print bed temperature up to 120°C",
-      "Wide material compatibility",
-      "High precision printing",
-      "Robust construction",
-      "User-friendly interface",
+      'Build volume from 300x300x300 mm to 500x500x500 mm',
+      'Nozzle temperature up to 330°C',
+      'Print bed temperature up to 120°C',
+      'Wide material compatibility',
+      'High precision printing',
+      'Robust construction',
+      'User-friendly interface',
     ],
     applications: [
-      "Rapid prototyping",
-      "Custom manufacturing",
-      "Research and development",
-      "Educational purposes",
-      "Product development",
+      'Rapid prototyping',
+      'Custom manufacturing',
+      'Research and development',
+      'Educational purposes',
+      'Product development',
     ],
-    modelPath: "/models/printer.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#4834D4", // Blue-purple from logo
-    category: "3D Printing",
-    brochureUrl: "/brochures/3d-fff-fdm-printer.pdf", // Add this line
+    modelPath: '/models/printer.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#4834D4', // Blue-purple from logo
+    category: '3D Printing',
+    brochureUrl: '/brochures/3d-fff-fdm-printer.pdf', // Add this line
   },
   {
-    id: "dod-printer",
-    slug: "drop-on-demand-3d-printer",
-    name: "Drop on Demand 3D Printer",
-    shortDescription: "Selective deposition and curing of material droplets for precise 3D printing.",
+    id: 'dod-printer',
+    slug: 'drop-on-demand-3d-printer',
+    name: 'Drop on Demand 3D Printer',
+    shortDescription:
+      'Selective deposition and curing of material droplets for precise 3D printing.',
     description: `
       SPPL designs and manufactures Drop On Demand 3D printers in which droplets of material are selectively deposited and cured on a build plate. Using photopolymers or wax droplets that cure when exposed to light, objects are built up one layer at a time.
 
@@ -156,33 +180,34 @@ export const products = [
       This technology allows for extremely precise and detailed 3D printing, ideal for applications requiring high resolution and fine features.
     `,
     features: [
-      "Piezo-driven inkjet printing technology",
-      "Droplet volume range from 20 pl to 380 pl",
-      "Non-contact dispensing",
-      "Viscosity range from 0.4 to 100 mPas",
-      "Single droplet or series dispensing",
-      "High precision and resolution",
-      "Compatible with photopolymers and wax materials",
+      'Piezo-driven inkjet printing technology',
+      'Droplet volume range from 20 pl to 380 pl',
+      'Non-contact dispensing',
+      'Viscosity range from 0.4 to 100 mPas',
+      'Single droplet or series dispensing',
+      'High precision and resolution',
+      'Compatible with photopolymers and wax materials',
     ],
     applications: [
-      "Jewelry production",
-      "Dental applications",
-      "Microfluidics",
-      "Electronics",
-      "Medical devices",
-      "High-detail prototyping",
+      'Jewelry production',
+      'Dental applications',
+      'Microfluidics',
+      'Electronics',
+      'Medical devices',
+      'High-detail prototyping',
     ],
-    modelPath: "/models/dod-printer.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#E84118", // Orange-red from logo
-    category: "3D Printing",
-    brochureUrl: "/brochures/drop-on-demand-3d-printer.pdf", // Add this line
+    modelPath: '/models/dod-printer.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#E84118', // Orange-red from logo
+    category: '3D Printing',
+    brochureUrl: '/brochures/drop-on-demand-3d-printer.pdf', // Add this line
   },
   {
-    id: "fsoc",
-    slug: "free-space-optics-communications",
-    name: "Free Space Optics Communications",
-    shortDescription: "10 Gbps outdoor FSO communications setup with auto alignment feature.",
+    id: 'fsoc',
+    slug: 'free-space-optics-communications',
+    name: 'Free Space Optics Communications',
+    shortDescription:
+      '10 Gbps outdoor FSO communications setup with auto alignment feature.',
     description: `
       SPPL designs, develops and manufactures outdoor unit FSO communications setups, supporting 10 Gbps, with auto alignment features complying to Make in India directive with more than 60% Indian Content.
 
@@ -191,93 +216,101 @@ export const products = [
       Our system supports two optical channels, one at 1550 nm IR wavelength for data transmission and the other channel at 785 nm wavelength for implementing auto-tracking features.
     `,
     features: [
-      "10 Gbps data transmission",
-      "Auto alignment feature",
-      "Make in India compliant (>60% Indian content)",
-      "Dual optical channels (1550 nm IR and 785 nm)",
-      "High bandwidth capacity",
-      "Enhanced security",
-      "Low power consumption",
-      "Quick deployment",
+      '10 Gbps data transmission',
+      'Auto alignment feature',
+      'Make in India compliant (>60% Indian content)',
+      'Dual optical channels (1550 nm IR and 785 nm)',
+      'High bandwidth capacity',
+      'Enhanced security',
+      'Low power consumption',
+      'Quick deployment',
     ],
     applications: [
-      "Last-mile connectivity",
-      "Campus connectivity",
-      "Disaster recovery",
-      "Temporary network setup",
-      "Secure communications",
-      "High-speed data transmission",
+      'Last-mile connectivity',
+      'Campus connectivity',
+      'Disaster recovery',
+      'Temporary network setup',
+      'Secure communications',
+      'High-speed data transmission',
     ],
-    modelPath: "/models/fsoc.glb",
-    imagePath: "/placeholder.svg?height=600&width=800",
-    color: "#4834D4", // Blue-purple from logo
-    category: "Communication Systems",
-    brochureUrl: "/brochures/free-space-optics-communications.pdf", // Add this line
+    modelPath: '/models/fsoc.glb',
+    imagePath: '/placeholder.svg?height=600&width=800',
+    color: '#4834D4', // Blue-purple from logo
+    category: 'Communication Systems',
+    brochureUrl: '/brochures/free-space-optics-communications.pdf', // Add this line
   },
-]
+];
 
 // Process steps data
 export const processSteps = [
   {
-    number: "01",
-    title: "Initial Discussion",
-    description: "Initial discussion with prospects on what is needed and what they imagine about their solution.",
-  },
-  {
-    number: "02",
-    title: "Broad Outline",
-    description: "Make broad outline on what is practical & possible based on customer requirements.",
-  },
-  {
-    number: "03",
-    title: "Fine Tuning Requirements",
-    description: "Many rounds of interaction to fine tune the requirements of the customer.",
-  },
-  {
-    number: "04",
-    title: "First Proposal",
-    description: "Once agreed, send proposal with detailed specifications and performance commitment.",
-  },
-  {
-    number: "05",
-    title: "Preliminary Design Review",
+    number: '01',
+    title: 'Initial Discussion',
     description:
-      "When purchase process is completed, we meet again with Preliminary Design Review (PDR) to sync with customer requirements.",
+      'Initial discussion with prospects on what is needed and what they imagine about their solution.',
   },
   {
-    number: "06",
-    title: "Critical Design Review",
-    description: "After PDR, we go for Critical Design Review (CDR) and final design.",
+    number: '02',
+    title: 'Broad Outline',
+    description:
+      'Make broad outline on what is practical & possible based on customer requirements.',
   },
   {
-    number: "07",
-    title: "Manufacturing",
-    description: "Once Final Design is completed, we proceed with manufacturing.",
+    number: '03',
+    title: 'Fine Tuning Requirements',
+    description:
+      'Many rounds of interaction to fine tune the requirements of the customer.',
   },
   {
-    number: "08",
-    title: "Feedback Process",
-    description: "We call customer to see the manufactured system and request for feedback.",
+    number: '04',
+    title: 'First Proposal',
+    description:
+      'Once agreed, send proposal with detailed specifications and performance commitment.',
   },
   {
-    number: "09",
-    title: "Delivery",
-    description: "Once agreed, we make changes and proceed for delivery.",
+    number: '05',
+    title: 'Preliminary Design Review',
+    description:
+      'When purchase process is completed, we meet again with Preliminary Design Review (PDR) to sync with customer requirements.',
   },
   {
-    number: "10",
-    title: "Installation & Support",
-    description: "We visit customer for installation & training, and assure long-term support.",
+    number: '06',
+    title: 'Critical Design Review',
+    description:
+      'After PDR, we go for Critical Design Review (CDR) and final design.',
   },
-]
+  {
+    number: '07',
+    title: 'Manufacturing',
+    description:
+      'Once Final Design is completed, we proceed with manufacturing.',
+  },
+  {
+    number: '08',
+    title: 'Feedback Process',
+    description:
+      'We call customer to see the manufactured system and request for feedback.',
+  },
+  {
+    number: '09',
+    title: 'Delivery',
+    description: 'Once agreed, we make changes and proceed for delivery.',
+  },
+  {
+    number: '10',
+    title: 'Installation & Support',
+    description:
+      'We visit customer for installation & training, and assure long-term support.',
+  },
+];
 
 // Collaborators data
 export const collaborators = [
   {
-    id: "microlight3d",
-    name: "Microlight3D",
+    id: 'microlight3d',
+    name: 'Microlight3D',
     description:
-      "Manufacturer of high-resolution micro-scale 2D & 3D printing systems, enabling scientists and industrial researchers with new design needs to produce demanding precision micro parts.",
+      'Manufacturer of high-resolution micro-scale 2D & 3D printing systems, enabling scientists and industrial researchers with new design needs to produce demanding precision micro parts.',
     longDescription: `
       Microlight3D is a manufacturer of high-resolution micro-scale 2D & 3D printing systems. The company enables scientists and industrial researchers with new design needs to produce the most demanding precision micro parts in any geometric or organic shape with a flawless finish.
       
@@ -285,14 +318,14 @@ export const collaborators = [
       
       Microlight3D's equipment is designed for application in microoptics, microfluidics, microrobotics, meta-materials, cell biology and microelectronics.
     `,
-    logo: "/placeholder.svg?height=200&width=200",
-    website: "#",
+    logo: '/placeholder.svg?height=200&width=200',
+    website: '#',
   },
   {
-    id: "lheritier",
-    name: "Lheritier",
+    id: 'lheritier',
+    name: 'Lheritier',
     description:
-      "For more than 30 years, LHERITIER has designed and produced rugged cameras and complex vision systems for the Defence, Security, Energy, and Aerospace Industries.",
+      'For more than 30 years, LHERITIER has designed and produced rugged cameras and complex vision systems for the Defence, Security, Energy, and Aerospace Industries.',
     longDescription: `
       For more than 30 years, LHERITIER has designed and produced rugged cameras and complex vision systems for the Defence, Security, Energy, Aerospace Industries.
       
@@ -300,76 +333,80 @@ export const collaborators = [
       
       In addition to a vast catalogue of COTS products, LHERITIER also offers tailored, modular solutions, with the ability to comply with any specific requirement.
     `,
-    logo: "/placeholder.svg?height=200&width=200",
-    website: "#",
+    logo: '/placeholder.svg?height=200&width=200',
+    website: '#',
   },
   {
-    id: "teraxion",
-    name: "TeraXion",
+    id: 'teraxion',
+    name: 'TeraXion',
     description:
-      "Leader in the manufacturing of innovative photonic components that incorporate fiber Bragg gratings, low noise lasers and integrated photonics.",
+      'Leader in the manufacturing of innovative photonic components that incorporate fiber Bragg gratings, low noise lasers and integrated photonics.',
     longDescription: `
       TeraXion is a leader in the manufacturing of innovative photonic components that incorporate fiber Bragg gratings, low noise lasers and integrated photonics.
       
       FBGs have been the cornerstone of our offering for 20 years and TeraXion has successfully applied this technology in four different markets, reaffirming FBGs' potential in countless highly advanced applications.
     `,
-    logo: "/placeholder.svg?height=200&width=200",
-    website: "#",
+    logo: '/placeholder.svg?height=200&width=200',
+    website: '#',
   },
   {
-    id: "fullscale",
-    name: "FullScale Labs",
+    id: 'fullscale',
+    name: 'FullScale Labs',
     description:
-      "Electronic expert focused on high-end uncooled thermal imaging solutions, guaranteeing designs according to the state of the art and perfectly matching quality rules.",
+      'Electronic expert focused on high-end uncooled thermal imaging solutions, guaranteeing designs according to the state of the art and perfectly matching quality rules.',
     longDescription: `
       FullScale is your electronic expert, mainly focused on high-end uncooled thermal imaging solutions.
       
       FullScale guarantees you that all its designs are done according to the state of the art and perfectly match quality rules. FullScale only uses high performance equipments and software perfectly meeting advanced analog designs requirement.
     `,
-    logo: "/placeholder.svg?height=200&width=200",
-    website: "#",
+    logo: '/placeholder.svg?height=200&width=200',
+    website: '#',
   },
-]
+];
 
 // Company strengths
 export const strengths = [
   {
-    icon: "Lightbulb",
-    title: "Customized Solutions",
-    description: "We work interactively with customers to understand their needs and create tailored solutions.",
-  },
-  {
-    icon: "Flag",
-    title: "Indian OEM & SI",
+    icon: 'Lightbulb',
+    title: 'Customized Solutions',
     description:
-      "We specialize in developing Indian Original Equipment Manufacturer and System Integrator in different fields.",
+      'We work interactively with customers to understand their needs and create tailored solutions.',
   },
   {
-    icon: "Users",
-    title: "Collaborative Approach",
+    icon: 'Flag',
+    title: 'Indian OEM & SI',
     description:
-      "We believe in multiple rounds of interaction to fine-tune requirements and ensure customer satisfaction.",
+      'We specialize in developing Indian Original Equipment Manufacturer and System Integrator in different fields.',
   },
   {
-    icon: "Wrench",
-    title: "Technical Expertise",
-    description: "Our team has deep technical knowledge across multiple domains including lasers, optics, and imaging.",
+    icon: 'Users',
+    title: 'Collaborative Approach',
+    description:
+      'We believe in multiple rounds of interaction to fine-tune requirements and ensure customer satisfaction.',
   },
   {
-    icon: "Shield",
-    title: "Quality Assurance",
-    description: "We follow rigorous design reviews and quality checks to ensure high-performance products.",
+    icon: 'Wrench',
+    title: 'Technical Expertise',
+    description:
+      'Our team has deep technical knowledge across multiple domains including lasers, optics, and imaging.',
   },
   {
-    icon: "HeartHandshake",
-    title: "Long-term Support",
-    description: "We provide installation, training, and ongoing support for all our products and solutions.",
+    icon: 'Shield',
+    title: 'Quality Assurance',
+    description:
+      'We follow rigorous design reviews and quality checks to ensure high-performance products.',
   },
-]
+  {
+    icon: 'HeartHandshake',
+    title: 'Long-term Support',
+    description:
+      'We provide installation, training, and ongoing support for all our products and solutions.',
+  },
+];
 
 // About company
 export const aboutCompany = {
-  title: "Who are we?",
+  title: 'Who are we?',
   description: `
     We have 30+ years of experience in working along with Scientists, Professors and Industrial companies. Our experience spans over RF & Microwave, Fiber Optics, Lasers, Imaging (Visible / Thermal) and to the market segments Research & Education, Telecom, Textile, Oil & Gas, Petrochemical, Diamond, Space, Nuclear, Aerospace, Defence, Engineering, Medical and many more.
     
@@ -378,18 +415,18 @@ export const aboutCompany = {
     We expertise in developing Indian Original Equipment Manufacturer (OEM) and System Integrator (SI) in different fields.
   `,
   vision:
-    "To be the leading provider of innovative, customized technological solutions that address complex challenges across industries.",
+    'To be the leading provider of innovative, customized technological solutions that address complex challenges across industries.',
   mission:
-    "We are committed to delivering high-quality, tailored solutions through collaborative engagement with our customers, leveraging our extensive expertise and experience to transform their ideas into reality.",
-}
+    'We are committed to delivering high-quality, tailored solutions through collaborative engagement with our customers, leveraging our extensive expertise and experience to transform their ideas into reality.',
+};
 
 // Theme colors from logo
 export const themeColors = {
-  gold: "#F1C40F", // Gold/yellow from outer ring
-  orangeRed: "#E84118", // Orange-red text and curve
-  bluePurple: "#4834D4", // Blue/purple outline and text
-  lightBlue: "#74B9FF", // Light blue gear
-  darkBg: "#121212", // Dark background for dark theme
-  darkCard: "#1E1E1E", // Slightly lighter dark for cards
-  darkText: "#E0E0E0", // Light text for dark theme
-}
+  gold: '#F1C40F', // Gold/yellow from outer ring
+  orangeRed: '#E84118', // Orange-red text and curve
+  bluePurple: '#4834D4', // Blue/purple outline and text
+  lightBlue: '#74B9FF', // Light blue gear
+  darkBg: '#121212', // Dark background for dark theme
+  darkCard: '#1E1E1E', // Slightly lighter dark for cards
+  darkText: '#E0E0E0', // Light text for dark theme
+};

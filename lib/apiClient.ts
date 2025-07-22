@@ -207,6 +207,60 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
+  // Gallery methods
+  async getGalleryItems(params?: PaginationParams & { search?: string; category?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.append('page', params.page.toString());
+    if (params?.perPage) searchParams.append('limit', params.perPage.toString());
+    if (params?.search) searchParams.append('search', params.search);
+    if (params?.category) searchParams.append('category', params.category);
+    
+    const query = searchParams.toString();
+    return this.request<{
+      galleryItems: any[];
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        pages: number;
+      };
+    }>(`/gallery${query ? `?${query}` : ''}`);
+  }
+
+  async getGalleryItem(id: string) {
+    return this.request<{ galleryItem: any }>(`/gallery/${id}`);
+  }
+
+  async createGalleryItem(data: {
+    category: string;
+    title: string;
+    subtitle: string;
+    imagePath: string;
+  }) {
+    return this.request<{ galleryItem: any; message: string }>('/gallery', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateGalleryItem(id: string, data: Partial<{
+    category: string;
+    title: string;
+    subtitle: string;
+    imagePath: string;
+  }>) {
+    return this.request<{ galleryItem: any; message: string }>(`/gallery/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteGalleryItem(id: string) {
+    return this.request<{ message: string }>(`/gallery/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

@@ -345,3 +345,125 @@ export function useDeleteContactForm() {
     },
   });
 }
+
+// Gallery hooks
+export function useGalleryItems(
+  params?: PaginationParams & { search?: string; category?: string },
+) {
+  return useQuery({
+    queryKey: ['gallery-items', params],
+    queryFn: () => apiClient.getGalleryItems(params),
+    select: (data) => (data.success ? data.data : null),
+  });
+}
+
+export function useGalleryItem(id: string) {
+  return useQuery({
+    queryKey: ['gallery-items', id],
+    queryFn: () => apiClient.getGalleryItem(id),
+    select: (data) => (data.success ? data.data : null),
+  });
+}
+
+export function useCreateGalleryItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: {
+      category: string;
+      title: string;
+      subtitle: string;
+      imagePath: string;
+    }) => apiClient.createGalleryItem(data),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['gallery-items'] });
+        toast({
+          title: 'Success',
+          description: 'Gallery item created successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to create gallery item',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create gallery item',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useUpdateGalleryItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { 
+      id: string; 
+      data: Partial<{
+        category: string;
+        title: string;
+        subtitle: string;
+        imagePath: string;
+      }>;
+    }) => apiClient.updateGalleryItem(id, data),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['gallery-items'] });
+        toast({
+          title: 'Success',
+          description: 'Gallery item updated successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to update gallery item',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update gallery item',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useDeleteGalleryItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => apiClient.deleteGalleryItem(id),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['gallery-items'] });
+        toast({
+          title: 'Success',
+          description: 'Gallery item deleted successfully',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: response.error || 'Failed to delete gallery item',
+          variant: 'destructive',
+        });
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete gallery item',
+        variant: 'destructive',
+      });
+    },
+  });
+}
