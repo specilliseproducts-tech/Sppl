@@ -107,8 +107,10 @@ model Solution {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   slug        String   @unique
   title       String
+  subtitle    String?  // Optional to handle existing data
   description String
-  imagePath   String
+  imagePath   String   // Main image (for backward compatibility)
+  images      String[] // Array of up to 4 images
   link        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

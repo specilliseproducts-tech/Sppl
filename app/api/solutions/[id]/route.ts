@@ -5,8 +5,10 @@ import { z } from 'zod';
 const solutionUpdateSchema = z.object({
   slug: z.string().min(1, 'Slug is required').optional(),
   title: z.string().min(1, 'Title is required').optional(),
+  subtitle: z.string().optional(),
   description: z.string().min(1, 'Description is required').optional(),
-  imagePath: z.string().min(1, 'Image path is required').optional(),
+  imagePath: z.string().min(1, 'Main image is required').optional(),
+  images: z.array(z.string()).max(4, 'Maximum 4 images allowed').optional(),
   link: z.string().min(1, 'Link is required').optional(),
 });
 

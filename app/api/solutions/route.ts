@@ -6,8 +6,10 @@ import { z } from 'zod';
 const solutionCreateSchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
   title: z.string().min(1, 'Title is required'),
+  subtitle: z.string().optional(),
   description: z.string().min(1, 'Description is required'),
-  imagePath: z.string().min(1, 'Image path is required'),
+  imagePath: z.string().min(1, 'Main image is required'),
+  images: z.array(z.string()).max(4, 'Maximum 4 images allowed').default([]),
   link: z.string().min(1, 'Link is required'),
 });
 
@@ -37,6 +39,12 @@ export async function GET(request: NextRequest) {
       where.OR = [
         {
           title: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          subtitle: {
             contains: search,
             mode: 'insensitive',
           },

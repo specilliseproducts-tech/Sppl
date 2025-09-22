@@ -29,57 +29,7 @@ export default function Home() {
       <HeroSection />
 
       {/* About Section */}
-      <section id="about" className="w-full py-20 bg-card">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <ScrollReveal direction="left">
-              <div className="md:w-full">
-                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
-                  30+ Years of Experience in Customized Solutions
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  We have over 30 years of experience working alongside
-                  scientists, professors, and industrial companies. Our
-                  expertise spans RF & Microwave, Fiber Optics, Lasers, Imaging
-                  (Visible/Thermal) and serves market segments including
-                  Research & Education, Telecom, Textile, Oil & Gas,
-                  Petrochemical, Diamond, Space, Nuclear, Aerospace, Defence,
-                  Engineering, Medical, and many more.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild className="group">
-                    <Link href="/about">
-                      Learn More About Us
-                      <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="border-primary text-primary hover:bg-primary/10"
-                  >
-                    <Link href="/contact">Contact Us</Link>
-                  </Button>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal direction="right" delay={0.2}>
-              <div className="md:w-full flex justify-center">
-                <div className="relative w-full max-w-md aspect-square rounded-full overflow-hidden border-8 border-accent/20">
-                  <Image
-                    src="/placeholder.svg?height=500&width=500"
-                    alt="Spécialisé Products Team"
-                    width={500}
-                    height={500}
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
+      
 
       {/* 3D Product Showcase */}
       <ProductShowcaseWrapper />

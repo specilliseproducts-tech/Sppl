@@ -121,19 +121,24 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Logo Area with more visible background */}
-          <Link href="/" className="flex items-center">
-            <div className="relative w-12 h-12 mr-2 bg-white rounded-full p-1 shadow-md">
+          <Link href="/" className="flex items-center mt-2">
+            <div className="relative w-16 h-16 mr-4 bg-white rounded-full p-2 shadow-md">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo_Disc%20shaped_without%20background%20%281%29-OQoxElFApTHusoL6AA21rF47oxtJzy.png"
                 alt="Spécialisé Products Logo"
-                width={48}
-                height={48}
+                width={64}
+                height={64}
                 className="object-contain"
               />
             </div>
-            <span className="font-bold text-xl text-primary">
-              Spécialisé Products
-            </span>
+            <div className="flex flex-col">
+              <span className="font-bold text-xl text-primary uppercase">
+                Spécialisé Products
+              </span>
+              <span className="text-sm text-white font-medium">
+                Customized Solutions Company
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

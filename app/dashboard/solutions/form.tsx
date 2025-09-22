@@ -32,8 +32,10 @@ export function SolutionForm(props: Props) {
     defaultValues: {
       slug: '',
       title: '',
+      subtitle: undefined,
       description: '',
       imagePath: '',
+      images: [],
       link: '',
       ...props.data,
     },
@@ -87,6 +89,20 @@ export function SolutionForm(props: Props) {
 
         <FormField
           control={form.control}
+          name="subtitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Subtitle (Optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Solution subtitle" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
@@ -108,7 +124,7 @@ export function SolutionForm(props: Props) {
           name="imagePath"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image</FormLabel>
+              <FormLabel>Main Image</FormLabel>
               <FormControl>
                 <div className="space-y-4">
                   <MediaUploader
@@ -124,14 +140,68 @@ export function SolutionForm(props: Props) {
                     <div className="flex items-center space-x-2">
                       <Image
                         src={field.value}
-                        alt="Solution preview"
+                        alt="Solution main image preview"
                         width={80}
                         height={80}
                         className="w-20 h-20 object-cover rounded"
                       />
                       <span className="text-sm text-muted-foreground">
-                        Current image
+                        Main image
                       </span>
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="images"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Additional Images (Up to 4)</FormLabel>
+              <FormControl>
+                <div className="space-y-4">
+                  <MediaUploader
+                    onUpload={(urls) => {
+                      const currentImages = field.value || [];
+                      const newImages = [...currentImages, ...urls].slice(0, 4); // Limit to 4 images
+                      field.onChange(newImages);
+                    }}
+                    multiple={true}
+                    folder="solutions"
+                  />
+                  {field.value && field.value.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-sm text-muted-foreground">
+                        Current images ({field.value.length}/4):
+                      </span>
+                      <div className="grid grid-cols-4 gap-2">
+                        {field.value.map((imageUrl, index) => (
+                          <div key={index} className="relative">
+                            <Image
+                              src={imageUrl}
+                              alt={`Solution image ${index + 1}`}
+                              width={80}
+                              height={80}
+                              className="w-20 h-20 object-cover rounded"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newImages = field.value.filter((_, i) => i !== index);
+                                field.onChange(newImages);
+                              }}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
