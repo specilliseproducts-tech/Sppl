@@ -32,7 +32,7 @@ export function SolutionForm(props: Props) {
     defaultValues: {
       slug: '',
       title: '',
-      subtitle: undefined,
+      subtitle: '',
       description: '',
       imagePath: '',
       images: [],

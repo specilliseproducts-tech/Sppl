@@ -15,17 +15,17 @@ export function HeroSection() {
         {
           title: "Axis Manipulator",
           description: "Automatic Alignment Assembly  for  Defence.",
-          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758534989/Model_No._SP2L-LEM_LCM-CO2_Front_Open_netqgb.jpg"
+          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758868805/wlskjpvbidnsvof8tzjm.png"
         },
         {
           title: "CNC Machining",
           description: "Advanced CNC machining services for complex parts",
-          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758534987/Model_SP2L-3D-BIO_Front_d2ueua.jpg"
+          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758868213/bgz38vyiu8oo2zisvnte.png"
         },
         {
           title: "Quality Control",
           description: "Comprehensive quality control and inspection services",
-          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758534985/Model_No._SP2L-3D-INK_Front_f7b4ys.jpg"
+          image: "https://res.cloudinary.com/dtcaaevst/image/upload/v1758867275/qu0mgyva43ix43pzdqog.png"
         }
       ]
     },

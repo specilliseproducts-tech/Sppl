@@ -26,6 +26,7 @@ export function UpdateSolution({ data, children }: Props) {
   async function updateSolution(
     updateData: z.infer<typeof solutionInsertSchema>,
   ) {
+    console.log('Updating solution with data:', { id: data.id, updateData });
     updateSolutionMutation.mutate({ id: data.id, data: updateData });
   }
 

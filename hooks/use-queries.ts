@@ -434,6 +434,7 @@ export function useUpdateSolution() {
           description: 'Solution updated successfully',
         });
       } else {
+        console.error('Update solution response error:', response);
         toast({
           title: 'Error',
           description: response.error || 'Failed to update solution',
@@ -442,6 +443,7 @@ export function useUpdateSolution() {
       }
     },
     onError: (error: Error) => {
+      console.error('Update solution mutation error:', error);
       toast({
         title: 'Error',
         description: error.message || 'Failed to update solution',
