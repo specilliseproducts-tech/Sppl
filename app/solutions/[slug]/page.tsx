@@ -7,6 +7,7 @@ import { getPdfDownloadUrl } from '@/lib/utils/pdf-test';
 
 import { Button } from '@/components/ui/button';
 import ScrollReveal from '@/components/scroll-reveal';
+import SolutionDetailWrapper from '@/components/solution-detail-wrapper';
 
 // Helper to fetch a solution by slug from the database
 async function fetchSolutionBySlug(slug: string) {
@@ -66,7 +67,7 @@ export default async function SolutionPage({
     currentIndex < solutions.length - 1 ? solutions[currentIndex + 1] : null;
 
   return (
-    <>
+    <SolutionDetailWrapper>
       {/* Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-accent/20">
         <div className="container mx-auto px-4">
@@ -331,6 +332,6 @@ export default async function SolutionPage({
           </div>
         </div>
       </section>
-    </>
+    </SolutionDetailWrapper>
   );
 }

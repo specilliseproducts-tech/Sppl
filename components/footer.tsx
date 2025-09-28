@@ -139,7 +139,7 @@ export default function Footer() {
               <li className="flex">
                 <MapPin className="h-5 w-5 text-secondary mr-3 shrink-0 mt-1" />
                 <span className="text-muted-foreground">
-                  Eklavya, Sector 21, Kharghar, Navi Mumbai, Maharashtra, India
+                  706 Kamdhenu Commerz, Plot # 2, Sector 14, Kharghar, Navi Mumbai, Maharashtra, India
                 </span>
               </li>
               <li className="flex">
@@ -148,7 +148,7 @@ export default function Footer() {
               </li>
               <li className="flex">
                 <Mail className="h-5 w-5 text-secondary mr-3 shrink-0" />
-                <span className="text-muted-foreground">mridulverma@specialiseproducts.com</span>
+                <span className="text-muted-foreground">info@specialiseproducts.com</span>
               </li>
             </ul>
           </div>

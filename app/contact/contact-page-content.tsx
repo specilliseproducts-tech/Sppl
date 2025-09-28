@@ -101,7 +101,7 @@ export default function ContactPageContent() {
                     <div>
                       <h3 className="font-bold text-foreground">Address</h3>
                       <p className="text-muted-foreground">
-                        Eklavya, Sector 21, Kharghar, Navi Mumbai, Maharashtra,
+                        706 Kamdhenu Commerz, Plot # 2, Sector 14, Kharghar, Navi Mumbai, Maharashtra,
                         India
                       </p>
                     </div>
@@ -120,7 +120,7 @@ export default function ContactPageContent() {
                     <div>
                       <h3 className="font-bold text-foreground">Email</h3>
                       <p className="text-muted-foreground">
-                        mridulverma@specialiseproducts.com
+                        info@specialiseproducts.com
                       </p>
                     </div>
                   </div>

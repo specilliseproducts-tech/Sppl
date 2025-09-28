@@ -7,11 +7,20 @@ import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/product-card';
 import ScrollReveal from '@/components/scroll-reveal';
 import ProductFilter from '@/components/product-filter';
+import InquiryPopup from '@/components/inquiry-popup';
 import { useProducts } from '@/hooks/use-queries';
+import { useAutoPopup } from '@/hooks/use-auto-popup';
+import { useSubmitInquiry } from '@/hooks/use-submit-inquiry';
 import { Product } from '../dashboard/products/schema';
 
 export default function ProductsClientPage() {
-  // Client component for filtering
+  const { isOpen, closePopup } = useAutoPopup({ delay: 25000 }); // Show after 25 seconds
+  const submitInquiry = useSubmitInquiry();
+
+  const handleInquirySubmit = (data: any) => {
+    submitInquiry.mutate(data);
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -66,6 +75,13 @@ export default function ProductsClientPage() {
           </Button>
         </div>
       </section>
+
+      {/* Inquiry Popup */}
+      <InquiryPopup
+        isOpen={isOpen}
+        onClose={closePopup}
+        onSubmit={handleInquirySubmit}
+      />
     </>
   );
 }

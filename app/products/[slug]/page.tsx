@@ -7,6 +7,7 @@ import { ChevronRight, ChevronLeft, Check, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ScrollReveal from '@/components/scroll-reveal';
 import ProductShowcaseSingleWrapper from '@/components/product-showcase/product-showcase-single-wrapper';
+import ProductDetailWrapper from '@/components/product-detail-wrapper';
 
 // Helper to fetch a product by slug from the database
 async function fetchProductBySlug(slug: string) {
@@ -66,7 +67,7 @@ export default async function ProductPage({
     currentIndex < products.length - 1 ? products[currentIndex + 1] : null;
 
   return (
-    <>
+    <ProductDetailWrapper>
       {/* Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-accent/20">
         <div className="container mx-auto px-4">
@@ -285,6 +286,6 @@ export default async function ProductPage({
           </div>
         </div>
       </section>
-    </>
+    </ProductDetailWrapper>
   );
 }

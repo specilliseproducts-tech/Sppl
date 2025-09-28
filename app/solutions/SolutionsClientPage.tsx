@@ -7,11 +7,27 @@ import { Button } from '@/components/ui/button';
 import SolutionCard from '@/components/solution-card';
 import ScrollReveal from '@/components/scroll-reveal';
 import SolutionFilter from '@/components/solution-filter';
+import InquiryPopup from '@/components/inquiry-popup';
 import { useSolutions } from '@/hooks/use-queries';
+import { useAutoPopup } from '@/hooks/use-auto-popup';
+import { useSubmitInquiry } from '@/hooks/use-submit-inquiry';
 import { Solution } from '../dashboard/solutions/schema';
 
 export default function SolutionsClientPage() {
-  // Client component for filtering
+  const { isOpen, closePopup } = useAutoPopup({ delay: 3000 }); // Show after 3 seconds for testing
+  const submitInquiry = useSubmitInquiry();
+
+  console.log('SolutionsClientPage - isOpen:', isOpen); // Debug log
+
+  // Clear localStorage for testing
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('inquiry-popup-shown');
+  }
+
+  const handleInquirySubmit = (data: any) => {
+    submitInquiry.mutate(data);
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -107,6 +123,13 @@ export default function SolutionsClientPage() {
           </Button>
         </div>
       </section>
+
+      {/* Inquiry Popup */}
+      <InquiryPopup
+        isOpen={isOpen}
+        onClose={closePopup}
+        onSubmit={handleInquirySubmit}
+      />
     </>
   );
 }
