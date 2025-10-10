@@ -40,7 +40,7 @@ const navItems = [
     dropdown: false,
   },
   {
-    name: 'Our Collaborators',
+    name: 'Testimonials',
     href: '/collaborators',
     dropdown: false,
   },
