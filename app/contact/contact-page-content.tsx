@@ -277,11 +277,18 @@ export default function ContactPageContent() {
             </div>
           </ScrollReveal>
 
-          <div className="rounded-xl overflow-hidden h-96 bg-card flex items-center justify-center">
-            {/* Placeholder for map - in a real implementation, you would use Google Maps or similar */}
-            <div className="text-muted-foreground">
-              Map will be displayed here
-            </div>
+          <div className="rounded-xl overflow-hidden h-96 bg-card">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.7835!2d73.0731133!3d19.0443263!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c21103e2885f%3A0x71a1d27dcb311ffb!2sKamdhenu%2C%2023VF%2BP6Q%2C%20Raghunath%20Rd%2C%20Block%20J%2C%20Block%20G%2C%20Sector%2013%2C%20Kharghar%2C%20Navi%20Mumbai%2C%20Maharashtra%20410210!5e0!3m2!1sen!2sin!4v1704625200000!5m2!1sen!2sin"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Spécialisé Products Location"
+              className="w-full h-full"
+            />
           </div>
         </div>
       </section>
