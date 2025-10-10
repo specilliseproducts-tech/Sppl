@@ -1,8 +1,3 @@
 {
-  "buildCommand": "prisma generate && next build",
-  "functions": {
-    "app/**/*.js": {
-      "maxDuration": 30
-    }
-  }
+  "buildCommand": "prisma generate && next build"
 }
