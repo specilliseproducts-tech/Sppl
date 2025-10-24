@@ -54,17 +54,35 @@ export function PrincipalProductForm(props: Props) {
       <form onSubmit={form.handleSubmit(props.onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="slug"
+          name="imagePath"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Slug (Auto-generated from title)</FormLabel>
+              <FormLabel>Company Logo</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="principal-product-slug"
-                  disabled
-                  className="bg-muted"
-                  {...field}
-                />
+                <div className="space-y-4">
+                  <MediaUploader
+                    onUpload={(urls) => {
+                      if (urls.length > 0) {
+                        field.onChange(urls[0]);
+                      }
+                    }}
+                    multiple={false}
+                  />
+                  {field.value && (
+                    <div className="flex items-center space-x-2">
+                      <Image
+                        src={field.value}
+                        alt="Company logo preview"
+                        width={80}
+                        height={80}
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        Current logo
+                      </span>
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,36 +123,17 @@ export function PrincipalProductForm(props: Props) {
 
         <FormField
           control={form.control}
-          name="imagePath"
+          name="slug"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image</FormLabel>
+              <FormLabel>Slug (Auto-generated from title)</FormLabel>
               <FormControl>
-                <div className="space-y-4">
-                  <MediaUploader
-                    onUpload={(urls) => {
-                      if (urls.length > 0) {
-                        field.onChange(urls[0]);
-                      }
-                    }}
-                    multiple={false}
-                    folder="principal-products"
-                  />
-                  {field.value && (
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src={field.value}
-                        alt="Principal Product preview"
-                        width={80}
-                        height={80}
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                      <span className="text-sm text-muted-foreground">
-                        Current image
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <Input
+                  placeholder="principal-product-slug"
+                  disabled
+                  className="bg-muted"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -5,16 +5,16 @@ import { Suspense } from 'react';
 
 function PrincipalProductsPageContent() {
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6 space-y-8">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Principal Products</h1>
+          <h1 className="text-3xl font-bold">Admin Principals</h1>
           <p className="text-muted-foreground">
-            Manage your principal product catalog
+            Manage your admin principal catalog and master products
           </p>
         </div>
         <CreatePrincipalProduct>
-          <Button>Create Principal Product</Button>
+          <Button>Create Admin Principal</Button>
         </CreatePrincipalProduct>
       </div>
 

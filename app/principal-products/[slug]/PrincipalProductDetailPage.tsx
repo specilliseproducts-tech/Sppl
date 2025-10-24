@@ -1,0 +1,220 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import ScrollReveal from '@/components/scroll-reveal';
+import { usePrincipalProducts } from '@/hooks/use-queries';
+import { ProductCard } from './ProductCard';
+
+interface Props {
+  slug: string;
+}
+
+export default function PrincipalProductDetailPage({ slug }: Props) {
+  const { data: principalProductsData, isLoading } = usePrincipalProducts({
+    perPage: 50,
+  });
+
+  const [currentProduct, setCurrentProduct] = useState<any>(null);
+  const [masterProducts, setMasterProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (principalProductsData?.principalProducts) {
+      const products = principalProductsData.principalProducts;
+      const product = products.find((p: any) => p.slug === slug);
+      
+      if (product) {
+        setCurrentProduct(product);
+        // Set master products from the current principal product
+        setMasterProducts(product.products || []);
+      }
+    }
+  }, [principalProductsData, slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading product details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentProduct) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-primary mb-4">Product Not Found</h1>
+          <p className="text-muted-foreground mb-6">
+            The principal product you're looking for doesn't exist.
+          </p>
+          <Button asChild>
+            <Link href="/principal-products">
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back to Principal Products
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Navigation between principal products
+  const allPrincipalProducts = principalProductsData?.principalProducts || [];
+  const currentIndex = allPrincipalProducts.findIndex((p: any) => p.slug === slug);
+  const prevProduct = currentIndex > 0 ? allPrincipalProducts[currentIndex - 1] : null;
+  const nextProduct = currentIndex < allPrincipalProducts.length - 1 ? allPrincipalProducts[currentIndex + 1] : null;
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <ScrollReveal>
+              <div className="flex items-center gap-4 mb-6 justify-start">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/principal-products">
+                    <ChevronLeft className="mr-2 h-4 w-4" />
+                    Back to Principal Products
+                  </Link>
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
+                {/* Image Section - Left */}
+                <div className="flex justify-center">
+                  <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
+                    <Image
+                      src={currentProduct.imagePath || '/placeholder.svg'}
+                      alt={currentProduct.title}
+                      fill
+                      className="object-contain p-4"
+                    />
+                  </div>
+                </div>
+                
+                {/* Content Section - Right */}
+                <div className="space-y-6">
+                  {/* Title Section */}
+                  <div>
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                      {currentProduct.title}
+                    </h1>
+                  </div>
+                  
+                  {/* Description Section */}
+                  <div>
+                    <p className="text-lg text-muted-foreground">
+                      {currentProduct.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+
+      {/* Master Products Section */}
+      {masterProducts && masterProducts.length > 0 && (
+        <section className="w-full py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+                  Master Products
+                </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Explore our comprehensive range of master products and solutions.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {masterProducts.map((product: any, index: number) => (
+                <ScrollReveal key={product.id || index} delay={index * 0.1}>
+                  <ProductCard
+                    product={product}
+                    productIndex={index}
+                    principalProductSlug={slug}
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Navigation */}
+      {(prevProduct || nextProduct) && (
+        <section className="w-full py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="max-w-4xl mx-auto">
+                <div className="flex justify-between items-center">
+                  {prevProduct ? (
+                    <Button variant="outline" asChild className="group">
+                      <Link href={`/principal-products/${prevProduct.slug}`}>
+                        <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                        {prevProduct.title}
+                      </Link>
+                    </Button>
+                  ) : (
+                    <div></div>
+                  )}
+                  
+                  {nextProduct ? (
+                    <Button variant="outline" asChild className="group">
+                      <Link href={`/principal-products/${nextProduct.slug}`}>
+                        {nextProduct.title}
+                        <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    </Button>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* CTA Section */}
+      <section className="w-full py-20 bg-gradient-to-br from-primary/20 to-secondary/20">
+        <div className="container mx-auto px-4 text-center">
+          <ScrollReveal>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
+              Interested in {currentProduct.title}?
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+              Contact us to learn more about this principal product and how it can benefit your organization.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button asChild size="lg" className="group">
+                <Link href="/contact">
+                  Get in Touch
+                  <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                </Link>
+              </Button>
+              <Button variant="outline" asChild size="lg" className="group">
+                <Link href={currentProduct.link} target="_blank" rel="noopener noreferrer">
+                  Visit Official Site
+                  <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+    </>
+  );
+}

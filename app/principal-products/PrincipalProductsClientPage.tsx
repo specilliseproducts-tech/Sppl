@@ -64,75 +64,45 @@ export default function PrincipalProductsClientPage() {
                   id={product.slug}
                   className="scroll-mt-20"
                 >
-                  <ScrollReveal direction={index % 2 === 0 ? 'left' : 'right'}>
-                    <div
-                      className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                        index % 2 === 1 ? 'lg:grid-cols-2' : ''
-                      }`}
-                      style={{
-                        gridTemplateColumns:
-                          index % 2 === 1 ? '2fr 1fr' : '1fr 2fr',
-                      }}
-                    >
-                      {index % 2 === 0 ? (
-                        <>
-                          <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
-                            <Image
-                              src={product.imagePath || '/placeholder.svg'}
-                              alt={product.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-                              {product.title}
-                            </h3>
-                            <p className="text-muted-foreground mb-6">
-                              {product.description}
-                            </p>
-                            <Button asChild className="group">
-                              <Link
-                                href={product.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Learn More
-                                <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                              </Link>
-                            </Button>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div>
-                            <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-                              {product.title}
-                            </h3>
-                            <p className="text-muted-foreground mb-6">
-                              {product.description}
-                            </p>
-                            <Button asChild className="group">
-                              <Link
-                                href={product.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Learn More
-                                <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                              </Link>
-                            </Button>
-                          </div>
-                          <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
-                            <Image
-                              src={product.imagePath || '/placeholder.svg'}
-                              alt={product.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </>
-                      )}
+                  <ScrollReveal direction="left">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                      {/* Logo - Left Side */}
+                      <div className="relative h-80 rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
+                        <Image
+                          src={product.imagePath || '/placeholder.svg'}
+                          alt={product.title}
+                          fill
+                          className="object-contain p-4"
+                        />
+                      </div>
+
+                      {/* Content - Right Side */}
+                      <div>
+                        <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
+                          {product.title}
+                        </h3>
+                        <p className="text-muted-foreground mb-6">
+                          {product.description}
+                        </p>
+                        <div className="flex gap-3">
+                          <Button asChild className="group">
+                            <Link
+                              href={product.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Learn More
+                              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                            </Link>
+                          </Button>
+                          <Button variant="outline" asChild className="group">
+                            <Link href={`/principal-products/${product.slug}`}>
+                              View Details
+                              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </ScrollReveal>
                 </div>

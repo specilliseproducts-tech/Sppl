@@ -2,12 +2,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
+const userProductSchema = z.object({
+  id: z.string().optional(),
+  slug: z.string().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  images: z.array(z.string()).max(2, 'Maximum 2 images allowed').optional().default([]),
+  keyFeatures: z.array(z.string()).optional().default([]),
+  productFamily: z.string().optional(),
+  components: z.string().optional(),
+  keyTechnicalSpecifications: z.string().optional(),
+  applicationsTargetMarkets: z.string().optional(),
+  technicalHighlights: z.string().optional(),
+  typicalApplications: z.string().optional(),
+  targetMarketsEndUsers: z.string().optional(),
+  keyDifferentiatorsPositioning: z.string().optional(),
+});
+
+const productSchema = z.object({
+  id: z.string().optional(),
+  slug: z.string().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  images: z.array(z.string()).max(2, 'Maximum 2 images allowed').optional().default([]),
+  keyFeatures: z.array(z.string()).optional().default([]),
+  userProducts: z.array(userProductSchema).optional().default([]),
+});
+
 const principalProductUpdateSchema = z.object({
   slug: z.string().min(1, 'Slug is required').optional(),
   title: z.string().min(1, 'Title is required').optional(),
   description: z.string().min(1, 'Description is required').optional(),
   imagePath: z.string().min(1, 'Image path is required').optional(),
   link: z.string().min(1, 'Link is required').optional(),
+  products: z.array(productSchema).optional(),
 });
 
 export async function GET(
@@ -22,17 +50,20 @@ export async function GET(
     });
 
     if (!principalProduct) {
-      return NextResponse.json(
-        { error: 'Principal product not found' },
-        { status: 404 },
-      );
+    return NextResponse.json(
+      { success: false, error: 'Principal product not found' },
+      { status: 404 },
+    );
     }
 
-    return NextResponse.json(principalProduct);
+    return NextResponse.json({
+      success: true,
+      data: principalProduct,
+    });
   } catch (error) {
     console.error('Error fetching principal product:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch principal product' },
+      { success: false, error: 'Failed to fetch principal product' },
       { status: 500 },
     );
   }
@@ -52,18 +83,21 @@ export async function PUT(
       data: validatedData,
     });
 
-    return NextResponse.json(principalProduct);
+    return NextResponse.json({
+      success: true,
+      data: principalProduct,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
+        { success: false, error: 'Validation failed', details: error.errors },
         { status: 400 },
       );
     }
 
     console.error('Error updating principal product:', error);
     return NextResponse.json(
-      { error: 'Failed to update principal product' },
+      { success: false, error: 'Failed to update principal product' },
       { status: 500 },
     );
   }
@@ -80,11 +114,11 @@ export async function DELETE(
       where: { id },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, data: null });
   } catch (error) {
     console.error('Error deleting principal product:', error);
     return NextResponse.json(
-      { error: 'Failed to delete principal product' },
+      { success: false, error: 'Failed to delete principal product' },
       { status: 500 },
     );
   }

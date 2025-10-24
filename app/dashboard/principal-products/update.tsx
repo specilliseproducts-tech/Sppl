@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { PrincipalProductForm } from './form';
+import { EnhancedPrincipalProductForm } from './enhanced-form';
 import { JSX } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUpdatePrincipalProduct } from '@/hooks/use-queries';
@@ -35,24 +35,31 @@ export function UpdatePrincipalProduct({ data, children }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Update Principal Product</DialogTitle>
+          <DialogTitle>Edit Admin Principal</DialogTitle>
         </DialogHeader>
-        <PrincipalProductForm
+        <EnhancedPrincipalProductForm
           data={data}
           onSubmit={updatePrincipalProduct}
           submitAction={
-            <DialogClose asChild>
-              <Button
-                type="submit"
-                disabled={updatePrincipalProductMutation.isPending}
-              >
-                {updatePrincipalProductMutation.isPending
-                  ? 'Updating...'
-                  : 'Update Principal Product'}
-              </Button>
-            </DialogClose>
+            <div className="flex justify-end gap-3 pt-4">
+              <DialogClose asChild>
+                <Button variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button
+                  type="submit"
+                  disabled={updatePrincipalProductMutation.isPending}
+                >
+                  {updatePrincipalProductMutation.isPending
+                    ? 'Updating...'
+                    : 'Update Admin Principal'}
+                </Button>
+              </DialogClose>
+            </div>
           }
         />
       </DialogContent>

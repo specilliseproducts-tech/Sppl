@@ -4,12 +4,18 @@
  * @returns A slugified string
  */
 export function generateSlug(text: string): string {
+  if (!text || typeof text !== 'string') {
+    return '';
+  }
+  
   return text
     .toLowerCase()
     .trim()
-    .replace(/[\s\W-]+/g, '-') // Replace spaces and non-word characters with hyphens
+    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
     .replace(/^-+|-+$/g, '') // Remove leading and trailing hyphens
-    .substring(0, 50); // Limit length to 50 characters
+    .substring(0, 100); // Limit length to 100 characters
 }
 
 /**

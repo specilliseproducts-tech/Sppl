@@ -126,6 +126,7 @@ model PrincipalProduct {
   description String
   imagePath   String
   link        String
+  products    Json[]   @default([]) // Array of product objects
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
