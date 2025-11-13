@@ -111,7 +111,7 @@ export function HeroSection() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-orange-500 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-secondary mb-4">
               {slidesData[currentSlide].title}
             </h2>
           </motion.div>
@@ -133,7 +133,7 @@ export function HeroSection() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-96 overflow-hidden"
+                    className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-96 overflow-hidden border-2 border-secondary/30 hover:border-secondary"
                   >
                     {/* Image Section - Full Card */}
                     <div className="relative h-full w-full">

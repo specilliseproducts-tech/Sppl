@@ -29,10 +29,10 @@ export default function SolutionCard({
   image,
   link,
   brochureUrl,
-  color = '#4834D4',
+  color = '#1C1E4E', // Deep Navy Blue
 }: SolutionCardProps) {
   return (
-    <Card className="group h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <Card className="group h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 border-secondary/30 hover:border-secondary">
       <div className="relative aspect-video overflow-hidden rounded-t-lg bg-white">
         <Image
           src={image || '/placeholder.svg'}
@@ -49,7 +49,7 @@ export default function SolutionCard({
           {title}
         </CardTitle>
         {subtitle && (
-          <p className="text-lg font-medium text-white mb-2">
+          <p className="text-lg font-medium text-foreground mb-2">
             {subtitle}
           </p>
         )}

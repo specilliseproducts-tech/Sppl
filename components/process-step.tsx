@@ -16,14 +16,14 @@ export default function ProcessStep({ number, title, description }: ProcessStepP
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
       whileHover={{
-        borderColor: "rgba(241, 196, 15, 0.5)",
-        backgroundColor: "rgba(241, 196, 15, 0.03)",
+        borderColor: "rgba(228, 88, 38, 0.5)",
+        backgroundColor: "rgba(228, 88, 38, 0.03)",
         transition: { duration: 0.2 },
       }}
       className="relative p-6 rounded-xl border border-muted transition-colors bg-card"
     >
       <motion.div
-        className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg shadow-lg"
+        className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg shadow-lg"
         whileHover={{
           scale: 1.1,
           boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",

@@ -45,14 +45,14 @@ export default function FeatureCard({ icon, title, description }: FeatureCardPro
       className="bg-card p-6 rounded-xl shadow-md transition-all duration-300"
     >
       <motion.div
-        className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4"
+        className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4"
         whileHover={{
           rotate: 360,
-          backgroundColor: "rgba(241, 196, 15, 0.2)",
+          backgroundColor: "rgba(228, 88, 38, 0.2)",
           transition: { duration: 0.8 },
         }}
       >
-        <Icon className="h-6 w-6 text-primary" />
+        <Icon className="h-6 w-6 text-secondary" />
       </motion.div>
       <h3 className="text-xl font-bold text-primary mb-3">{title}</h3>
       <p className="text-muted-foreground">{description}</p>

@@ -26,7 +26,7 @@ export default function ProductCard({
   description,
   image,
   features,
-  color = "#E8A317",
+  color = "#F9B208", // Golden Yellow
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -40,7 +40,7 @@ export default function ProductCard({
         y: -10,
         transition: { duration: 0.2 },
       }}
-      className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+      className="bg-card rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-2 border-secondary/30 hover:border-secondary"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -96,7 +96,7 @@ export default function ProductCard({
           ))}
         </div>
 
-        <Button asChild variant="outline" className="w-full group border-primary text-primary hover:bg-primary/10">
+        <Button asChild variant="outline" className="w-full group border-secondary text-secondary hover:bg-secondary/10">
           <Link href={`/products/${slug}`}>
             Learn More
             <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />

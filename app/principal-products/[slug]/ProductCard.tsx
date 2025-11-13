@@ -24,7 +24,7 @@ export function ProductCard({ product, productIndex, principalProductSlug }: Pro
   const productLink = product.slug || productIndex.toString();
   
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card border-0">
+    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-card border-2 border-secondary/30 hover:border-secondary">
       {/* Content Section - Dark Background */}
       <CardContent className="p-6 bg-card space-y-4">
         {/* Title */}

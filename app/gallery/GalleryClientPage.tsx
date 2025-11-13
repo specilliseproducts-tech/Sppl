@@ -70,7 +70,7 @@ export default function GalleryClientPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {galleryItems.map((item: GallerySelect, i: number) => (
                 <ScrollReveal key={item.id} delay={i * 0.05}>
-                  <div className="group relative bg-card rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                  <div className="group relative bg-card rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border-2 border-secondary/30 hover:border-secondary">
                     <div className="aspect-[4/3] relative">
                       <Image
                         src={item.imagePath || "/placeholder.svg"}

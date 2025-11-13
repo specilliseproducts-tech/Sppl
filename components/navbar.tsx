@@ -112,7 +112,7 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 border-secondary',
         isScrolled
           ? 'bg-background/90 backdrop-blur-md shadow-md py-2'
           : 'bg-background/70 backdrop-blur-sm py-4',
@@ -135,7 +135,7 @@ export default function Navbar() {
               <span className="font-bold text-xl text-primary uppercase">
                 Spécialisé Products
               </span>
-              <span className="text-sm text-white font-medium">
+              <span className="text-sm text-foreground/80 font-medium">
                 Customized Solutions Company
               </span>
             </div>
@@ -154,7 +154,7 @@ export default function Navbar() {
                 {item.dropdown ? (
                   <button
                     onClick={() => toggleDropdown(item.name)}
-                    className="flex items-center font-medium hover:text-primary transition-colors"
+                    className="flex items-center font-medium hover:text-secondary transition-colors"
                   >
                     {item.name}
                     <ChevronDown
@@ -167,7 +167,7 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="font-medium hover:text-primary transition-colors"
+                    className="font-medium hover:text-secondary transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -189,7 +189,7 @@ export default function Navbar() {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className="block px-4 py-2 text-sm hover:bg-primary hover:text-white transition-colors"
+                              className="block px-4 py-2 text-sm hover:bg-secondary hover:text-white transition-colors"
                               onClick={() => setActiveDropdown(null)}
                             >
                               {subItem.name}
@@ -215,9 +215,9 @@ export default function Navbar() {
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6 text-primary" />
+              <X className="h-6 w-6 text-secondary" />
             ) : (
-              <Menu className="h-6 w-6 text-primary" />
+              <Menu className="h-6 w-6 text-secondary" />
             )}
           </button>
         </div>
@@ -241,7 +241,7 @@ export default function Navbar() {
                       <>
                         <button
                           onClick={() => toggleDropdown(item.name)}
-                          className="flex items-center justify-between w-full py-2 font-medium text-foreground hover:text-primary transition-colors"
+                          className="flex items-center justify-between w-full py-2 font-medium text-foreground hover:text-secondary transition-colors"
                         >
                           <span>{item.name}</span>
                           <ChevronDown
@@ -265,7 +265,7 @@ export default function Navbar() {
                                 <Link
                                   key={subItem.name}
                                   href={subItem.href}
-                                  className="block py-2 text-muted-foreground hover:text-primary transition-colors"
+                                  className="block py-2 text-muted-foreground hover:text-secondary transition-colors"
                                   onClick={() => {
                                     setIsMenuOpen(false);
                                     setActiveDropdown(null);
@@ -281,7 +281,7 @@ export default function Navbar() {
                     ) : (
                       <Link
                         href={item.href}
-                        className="block py-2 font-medium text-foreground hover:text-primary transition-colors"
+                        className="block py-2 font-medium text-foreground hover:text-secondary transition-colors"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {item.name}

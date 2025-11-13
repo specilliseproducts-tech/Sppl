@@ -80,10 +80,10 @@ export default function ProductPage({ params }: Props) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading product...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading product...</p>
         </div>
       </div>
     );
@@ -91,10 +91,10 @@ export default function ProductPage({ params }: Props) {
 
   if (!currentProduct) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-orange-500 mb-4">Product Not Found</h1>
-          <p className="text-gray-400 mb-6">The product you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold text-secondary mb-4">Product Not Found</h1>
+          <p className="text-muted-foreground mb-6">The product you're looking for doesn't exist.</p>
           <Button asChild>
             <Link href={`/principal-products/${params.slug}`}>
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -107,74 +107,85 @@ export default function ProductPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Master Product Info */}
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
       {currentProduct && (
-        <div className="bg-gradient-to-br from-primary/20 to-secondary/20 border-b border-gray-700 py-16">
+        <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-              {/* Left: Images (Reduced size) */}
-              <div className="flex flex-col gap-4">
-                {currentProduct.images && currentProduct.images.length > 0 ? (
-                  <>
-                    {currentProduct.images.map((image: string, idx: number) => (
-                      <div key={idx} className="relative w-full aspect-square rounded-lg overflow-hidden border border-gray-700">
+            <div className="max-w-6xl mx-auto">
+              <ScrollReveal>
+                <div className="flex items-center gap-4 mb-6 justify-start">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/principal-products/${params.slug}`}>
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back to Principal Product
+                    </Link>
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
+                  {/* Image Section - Left */}
+                  <div className="flex justify-center">
+                    {currentProduct.images && currentProduct.images.length > 0 ? (
+                      <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
                         <Image
-                          src={image}
-                          alt={`Master product image ${idx + 1}`}
+                          src={currentProduct.images[0]}
+                          alt={currentProduct.title || 'Master product'}
                           fill
-                          className="object-cover"
+                          className="object-contain p-4"
                         />
                       </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className="relative w-full aspect-square rounded-lg overflow-hidden border border-gray-700 bg-gray-800 flex items-center justify-center">
-                    <span className="text-gray-500 text-sm">No images available</span>
+                    ) : (
+                      <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
+                        <span className="text-muted-foreground">No images available</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-
-              {/* Right: Title and Details (2 columns width) */}
-              <div className="md:col-span-2 space-y-8">
-                {/* Title */}
-                <div>
-                  <h1 className="text-5xl font-bold text-orange-500 mb-4">
-                    {currentProduct.title || 'Untitled Master Product'}
-                  </h1>
-                  {currentProduct.subtitle && (
-                    <p className="text-gray-400 text-xl mb-6">{currentProduct.subtitle}</p>
-                  )}
+                  
+                  {/* Content Section - Right */}
+                  <div className="space-y-6">
+                    {/* Title Section */}
+                    <div>
+                      <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
+                        {currentProduct.title || 'Untitled Master Product'}
+                      </h1>
+                      {currentProduct.subtitle && (
+                        <p className="text-lg text-muted-foreground mb-6">
+                          {currentProduct.subtitle}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Key Features Section */}
+                    {currentProduct.keyFeatures && currentProduct.keyFeatures.length > 0 && (
+                      <div>
+                        <h3 className="text-xl font-semibold text-secondary mb-4">Key Features</h3>
+                        <ul className="space-y-3">
+                          {currentProduct.keyFeatures.map((feature: string, idx: number) => (
+                            <li key={idx} className="flex items-start gap-3 text-foreground">
+                              <span className="text-secondary font-bold mt-1">✓</span>
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-
-                {/* Key Features */}
-                {currentProduct.keyFeatures && currentProduct.keyFeatures.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold text-orange-500 mb-4">Key Features</h3>
-                    <ul className="space-y-3">
-                      {currentProduct.keyFeatures.map((feature: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-3 text-gray-300">
-                          <span className="text-orange-500 font-bold mt-1">✓</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              </ScrollReveal>
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* User Products Cards Section */}
-      <section className="w-full py-20 bg-gray-900">
+      <section className="w-full py-20 bg-background">
         <div className="container mx-auto px-4">
           <ScrollReveal>
             {/* Section Header */}
             <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold text-orange-500 mb-4">User Products</h2>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              <h2 className="text-5xl font-bold text-primary mb-4">User Products</h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 Explore our comprehensive range of user products and solutions.
               </p>
             </div>
@@ -186,14 +197,14 @@ export default function ProductPage({ params }: Props) {
                   {currentProduct.userProducts.map((userProduct: any, index: number) => (
                     <Card 
                       key={index} 
-                      className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700 hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300 h-full flex flex-col overflow-hidden"
+                      className="bg-card border-2 border-secondary/30 hover:border-secondary hover:shadow-lg hover:shadow-secondary/20 transition-all duration-300 h-full flex flex-col overflow-hidden"
                     >
                       <CardContent className="p-0 flex flex-col h-full">
                         {/* Top section with title and image */}
-                        <div className="bg-gray-900 border-b border-gray-700">
+                        <div className="bg-card border-b border-secondary/20">
                           {/* User Product Title */}
                           <div className="px-6 pt-6 pb-4">
-                            <h3 className="text-2xl font-bold text-orange-500">
+                            <h3 className="text-2xl font-bold text-primary">
                               {userProduct.title || `User Product ${index + 1}`}
                             </h3>
                           </div>
@@ -209,15 +220,15 @@ export default function ProductPage({ params }: Props) {
                               />
                             </div>
                           ) : (
-                            <div className="w-full aspect-video bg-gray-800 flex items-center justify-center border-b border-gray-700">
-                              <span className="text-gray-500">No image available</span>
+                            <div className="w-full aspect-video bg-muted flex items-center justify-center border-b border-secondary/20">
+                              <span className="text-muted-foreground">No image available</span>
                             </div>
                           )}
 
                           {/* Subtitle */}
                           {userProduct.subtitle && (
-                            <div className="px-6 py-4 border-b border-gray-700">
-                              <p className="text-gray-400 text-sm">{userProduct.subtitle}</p>
+                            <div className="px-6 py-4 border-b border-secondary/20">
+                              <p className="text-muted-foreground text-sm">{userProduct.subtitle}</p>
                             </div>
                           )}
                         </div>
@@ -226,7 +237,7 @@ export default function ProductPage({ params }: Props) {
                         <div className="p-6 mt-auto">
                           <Button 
                             asChild 
-                            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-colors"
+                            className="w-full font-semibold transition-colors"
                           >
                             <Link 
                               href={`/principal-products/${params.slug}/products/${params.productSlug}/view-details/${userProduct.slug || `user-product-${index}`}`}
@@ -242,12 +253,12 @@ export default function ProductPage({ params }: Props) {
                 </div>
 
                 {/* Grid divider */}
-                <div className="my-12 border-t border-gray-700"></div>
+                <div className="my-12 border-t-2 border-secondary"></div>
               </>
             ) : (
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-12 text-center">
-                <p className="text-gray-400 text-lg mb-4">No user products available for this master product.</p>
-                <p className="text-gray-500 text-sm">User products will appear here once they are created by the admin.</p>
+              <div className="bg-card border-2 border-secondary/30 rounded-lg p-12 text-center">
+                <p className="text-muted-foreground text-lg mb-4">No user products available for this master product.</p>
+                <p className="text-muted-foreground/70 text-sm">User products will appear here once they are created by the admin.</p>
               </div>
             )}
           </ScrollReveal>

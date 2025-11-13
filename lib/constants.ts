@@ -79,7 +79,7 @@ export const products = [
     ],
     modelPath: '/models/laser-machine.glb',
     imagePath: '/placeholder.svg?height=600&width=800',
-    color: '#E84118', // Orange-red from logo
+    color: '#E45826', // Vibrant Orange
     category: 'Laser Systems',
     brochureUrl: '/brochures/microchannel-fabrication-machine.pdf', // Add this line
   },
@@ -121,7 +121,7 @@ export const products = [
     ],
     modelPath: '/models/scanner.glb',
     imagePath: '/placeholder.svg?height=600&width=800',
-    color: '#4834D4', // Blue-purple from logo
+    color: '#1C1E4E', // Deep Navy Blue
     category: 'Thermal Mapping Systems',
     brochureUrl: '/brochures/alestm-system.pdf', // Add this line
   },
@@ -157,7 +157,7 @@ export const products = [
     ],
     modelPath: '/models/cutter.glb',
     imagePath: '/placeholder.svg?height=600&width=800',
-    color: '#E84118', // Orange-red from logo
+    color: '#E45826', // Vibrant Orange
     category: 'Laser Systems',
     brochureUrl: '/brochures/laser-marking-cutting-machine.pdf', // Add this line
   },
@@ -342,13 +342,20 @@ export const aboutCompany = {
     'We are committed to delivering high-quality, tailored solutions through collaborative engagement with our customers, leveraging our extensive expertise and experience to transform their ideas into reality.',
 };
 
-// Theme colors from logo
+// Theme colors - New color palette
 export const themeColors = {
-  gold: '#F1C40F', // Gold/yellow from outer ring
-  orangeRed: '#E84118', // Orange-red text and curve
-  bluePurple: '#4834D4', // Blue/purple outline and text
-  lightBlue: '#74B9FF', // Light blue gear
-  darkBg: '#121212', // Dark background for dark theme
-  darkCard: '#1E1E1E', // Slightly lighter dark for cards
-  darkText: '#E0E0E0', // Light text for dark theme
+  primary: '#1C1E4E', // Deep Navy Blue - Main background, navbar, headings
+  secondary: '#E45826', // Vibrant Orange - Buttons, CTAs, hover highlights
+  accent: '#F9B208', // Golden Yellow - Highlights, borders, subtle glows
+  highlight: '#A3C9E2', // Cool Light Blue - Icons, info boxes, hover accents
+  neutralLight: '#F9F9F7', // Soft Ivory White - Page backgrounds, content area
+  neutralDark: '#101820', // Charcoal Black - Text, footer, strong contrast
+  // Legacy aliases for backward compatibility
+  gold: '#F9B208', // Golden Yellow
+  orangeRed: '#E45826', // Vibrant Orange
+  bluePurple: '#1C1E4E', // Deep Navy Blue
+  lightBlue: '#A3C9E2', // Cool Light Blue
+  darkBg: '#101820', // Charcoal Black
+  darkCard: '#1C1E4E', // Deep Navy Blue
+  darkText: '#F9F9F7', // Soft Ivory White
 };

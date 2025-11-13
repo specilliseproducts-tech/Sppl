@@ -5,7 +5,6 @@ import { Canvas } from '@react-three/fiber';
 import {
   OrbitControls,
   PerspectiveCamera,
-  Environment,
 } from '@react-three/drei';
 
 import SimpleModel from './simple-model';
@@ -29,8 +28,8 @@ function CanvasContent({
 }) {
   return (
     <>
-      <color attach="background" args={['#121212']} />
-      <fog attach="fog" args={['#121212', 5, 20]} />
+      <color attach="background" args={['#101820']} />
+      <fog attach="fog" args={['#101820', 5, 20]} />
 
       <PerspectiveCamera makeDefault position={[0, 1, 5]} fov={50} />
 
@@ -41,10 +40,13 @@ function CanvasContent({
 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
         <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#1E1E1E" />
+        <meshStandardMaterial color="#1C1E4E" />
       </mesh>
 
-      <Environment preset="city" />
+      {/* Additional lighting for better illumination */}
+      <pointLight position={[-5, 5, -5]} intensity={0.3} />
+      <pointLight position={[5, 5, 5]} intensity={0.3} />
+      
       <OrbitControls
         autoRotate={autoRotate}
         autoRotateSpeed={1}

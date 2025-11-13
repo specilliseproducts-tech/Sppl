@@ -26,19 +26,19 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#EA5B21", // Updated to orange-red from user's request
+          DEFAULT: "#1C1E4E", // Deep Navy Blue - Main background, navbar, headings
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#393185", // Updated to deep purple/blue from user's request
+          DEFAULT: "#E45826", // Vibrant Orange - Buttons, CTAs, hover highlights
           foreground: "hsl(var(--secondary-foreground))",
         },
         accent: {
-          DEFAULT: "#393185", // Updated to match secondary
+          DEFAULT: "#F9B208", // Golden Yellow - Highlights, borders, subtle glows
           foreground: "hsl(var(--accent-foreground))",
         },
         highlight: {
-          DEFAULT: "hsl(var(--highlight))",
+          DEFAULT: "#A3C9E2", // Cool Light Blue - Icons, info boxes, hover accents
           foreground: "hsl(var(--highlight-foreground))",
         },
         destructive: {

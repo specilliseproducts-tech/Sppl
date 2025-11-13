@@ -4,7 +4,7 @@ import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "luc
 
 export default function Footer() {
   return (
-    <footer className="bg-card text-foreground pt-16 pb-8">
+    <footer className="bg-card text-foreground pt-16 pb-8 border-t-2 border-secondary">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
@@ -24,19 +24,19 @@ export default function Footer() {
               Spontaneous, Pre-emptive, Creative Solutions for your Demanding Applications.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="#" className="text-muted-foreground hover:text-secondary transition-colors">
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="#" className="text-muted-foreground hover:text-secondary transition-colors">
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="#" className="text-muted-foreground hover:text-secondary transition-colors">
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="#" className="text-muted-foreground hover:text-secondary transition-colors">
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
@@ -47,7 +47,7 @@ export default function Footer() {
             <h3 className="text-lg font-bold mb-6 text-primary">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/" className="text-muted-foreground hover:text-secondary transition-colors">
                   Home
                 </Link>
               </li>
@@ -85,7 +85,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/microchannel-fabrication-machine"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Microchannel Fabrication
                 </Link>
@@ -93,7 +93,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/alestm-system"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   ALESTM System
                 </Link>
@@ -101,7 +101,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/laser-marking-cutting-machine"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Laser Marking & Cutting
                 </Link>
@@ -109,7 +109,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/3d-fff-fdm-printer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   3D Printers
                 </Link>
@@ -117,7 +117,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/free-space-optics-communications"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Free Space Optics
                 </Link>
@@ -125,7 +125,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/products/drop-on-demand-3d-printer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-secondary transition-colors"
                 >
                   Drop on Demand 3D Printer
                 </Link>
@@ -154,7 +154,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-muted pt-8">
+        <div className="border-t-2 border-secondary pt-8">
           <p className="text-center text-muted-foreground">
             &copy; {new Date().getFullYear()} Spécialisé Products - All Rights Reserved.
           </p>
