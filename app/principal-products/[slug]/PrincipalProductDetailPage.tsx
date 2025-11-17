@@ -73,13 +73,13 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
 
   return (
     <>
-      {/* Admin Principal Information / Hero Section */}
-      <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
+      {/* Hero Section: Image & Title */}
+      <section className="relative w-full py-16 bg-gradient-to-br from-primary/20 to-secondary/20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <ScrollReveal>
               {/* Back Button */}
-              <div className="flex items-center gap-4 mb-6 justify-start">
+              <div className="mb-8">
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/principal-products">
                     <ChevronLeft className="mr-2 h-4 w-4" />
@@ -88,51 +88,19 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                 </Button>
               </div>
 
-              {/* Principal Info Card */}
-              <div className="mt-8 rounded-2xl border border-secondary/20 bg-card/80 p-6 lg:p-8 shadow-sm">
-                <div className="grid grid-cols-1 lg:grid-cols-[280px,1fr] gap-10 items-start">
-                  {/* Image Section - Left */}
-                  <div className="flex justify-center">
-                    <div className="relative w-64 h-64 rounded-xl overflow-hidden bg-background border border-secondary/30 flex items-center justify-center">
-                      <Image
-                        src={currentProduct.imagePath || '/placeholder.svg'}
-                        alt={currentProduct.title}
-                        fill
-                        className="object-contain p-4"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Content Section - Right */}
-                  <div className="space-y-6">
-                    {/* Title & Description */}
-                    <div>
-                      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
-                        {currentProduct.title}
-                      </h1>
-                      <p className="text-base md:text-lg text-muted-foreground">
-                        {currentProduct.description}
-                      </p>
-                    </div>
-
-                    {/* Key Facts */}
-                    {currentProduct.keyFacts && currentProduct.keyFacts.length > 0 && (
-                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
-                        <h3 className="text-sm font-semibold text-secondary mb-3">
-                          Key Facts
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                          {currentProduct.keyFacts.map((fact: string, idx: number) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-medium"
-                            >
-                              {fact}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+              {/* Title & Image */}
+              <div className="text-center">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-8">
+                  {currentProduct.title}
+                </h1>
+                <div className="flex justify-center">
+                  <div className="relative w-64 h-64 rounded-xl overflow-hidden bg-background border-2 border-secondary/30 flex items-center justify-center shadow-lg">
+                    <Image
+                      src={currentProduct.imagePath || '/placeholder.svg'}
+                      alt={currentProduct.title}
+                      fill
+                      className="object-contain p-4"
+                    />
                   </div>
                 </div>
               </div>
@@ -166,7 +134,7 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                             (header: string, idx: number) => (
                               <th
                                 key={idx}
-                                className="px-4 py-3 border-b-2 border-secondary/30 text-left text-sm font-semibold text-secondary bg-secondary/10"
+                                className="px-4 py-3 border-b-2 border-secondary/30 text-left text-base font-semibold text-secondary bg-secondary/10"
                               >
                                 {header}
                               </th>
@@ -190,18 +158,18 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                                   return (
                                     <td
                                       key={colIndex}
-                                      className="px-4 py-3 border-b border-secondary/10 text-sm text-foreground"
+                                      className="px-4 py-3 border-b border-secondary/10 text-base text-foreground"
                                     >
                                       {hasNewlines ? (
                                         <ul className="list-none space-y-1">
                                           {cellContent
                                             .split('\n')
-                                            .filter(line => line.trim())
-                                            .map((line, lineIdx) => {
+                                            .filter((line: string) => line.trim())
+                                            .map((line: string, lineIdx: number) => {
                                               // Remove existing bullet symbols if present
                                               const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
                                               return (
-                                                <li key={lineIdx} className="flex items-start">
+                                                <li key={lineIdx} className="flex items-start text-base">
                                                   <span className="text-secondary mr-2">•</span>
                                                   <span>{cleanLine}</span>
                                                 </li>
@@ -228,9 +196,77 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
         </section>
       )}
 
+      {/* About Section */}
+      <section className="w-full py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <ScrollReveal>
+            <div className="max-w-6xl mx-auto">
+              {/* Heading with underline */}
+              <div className="mb-12 text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-3">
+                  About {currentProduct.title}
+                </h2>
+                <div className="h-0.5 bg-secondary w-full"></div>
+              </div>
+
+              {/* Description with special formatting */}
+              {currentProduct.description && (
+                <div className="bg-card rounded-xl shadow-lg p-8">
+                  <div className="text-lg md:text-xl text-muted-foreground leading-relaxed text-left">
+                    {currentProduct.description
+                      .split(/\n\s*\n/)
+                      .filter((para: string) => para.trim())
+                      .map((paragraph: string, idx: number) => {
+                        const trimmedPara = paragraph.trim().replace(/\n/g, ' ');
+                        // Check if paragraph starts with **Heading:** format
+                        const headingMatch = trimmedPara.match(/^\*\*([^*]+):\*\*\s*(.+)$/);
+                        
+                        if (headingMatch) {
+                          // Special highlighted section with heading
+                          const heading = headingMatch[1];
+                          const content = headingMatch[2];
+                          return (
+                            <div key={idx} className="mb-6 last:mb-0 bg-secondary/5 rounded-lg border-l-4 border-secondary pl-6 pr-4 py-4">
+                              <h3 className="font-bold text-primary mb-2">{heading}</h3>
+                              <p className="text-muted-foreground">{content}</p>
+                            </div>
+                          );
+                        } else {
+                          // Regular paragraph
+                          return (
+                            <p key={idx} className="mb-6 last:mb-0">
+                              {trimmedPara}
+                            </p>
+                          );
+                        }
+                      })}
+                  </div>
+                </div>
+              )}
+
+              {/* Key Facts */}
+              {currentProduct.keyFacts && currentProduct.keyFacts.length > 0 && (
+                <div className="mt-8 bg-card rounded-xl shadow-lg p-8">
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    {currentProduct.keyFacts.map((fact: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-4 py-2 text-sm font-medium"
+                      >
+                        {fact}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Master Products Section */}
       {masterProducts && masterProducts.length > 0 && (
-        <section className="w-full py-20 bg-background">
+        <section className="w-full py-20 bg-background border-t-2 border-secondary/30">
           <div className="container mx-auto px-4">
             <ScrollReveal>
               <div className="text-center mb-16">

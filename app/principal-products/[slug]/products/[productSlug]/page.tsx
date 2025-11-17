@@ -136,27 +136,16 @@ export default function ProductPage({ params }: Props) {
                   )}
                 </div>
 
-                {/* Images Grid */}
-                {currentProduct.images && currentProduct.images.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    {currentProduct.images.map((image: string, idx: number) => (
-                      <div
-                        key={idx}
-                        className="relative h-80 w-full rounded-xl overflow-hidden shadow-lg bg-background border-2 border-secondary/30 flex items-center justify-center"
-                      >
-                        <Image
-                          src={image}
-                          alt={`${currentProduct.title || 'Master product'} - Image ${idx + 1}`}
-                          fill
-                          className="object-contain p-4"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="max-w-2xl mx-auto">
-                    <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg bg-muted border-2 border-secondary/30 flex items-center justify-center">
-                      <span className="text-muted-foreground">No images available</span>
+                {/* Images - Only show if images exist, centered */}
+                {currentProduct.images && currentProduct.images.length > 0 && (
+                  <div className="flex justify-center">
+                    <div className="relative h-64 w-full max-w-lg rounded-xl overflow-hidden shadow-lg bg-background border-2 border-secondary/30 flex items-center justify-center">
+                      <Image
+                        src={currentProduct.images[0]}
+                        alt={currentProduct.title || 'Master product'}
+                        fill
+                        className="object-contain p-4"
+                      />
                     </div>
                   </div>
                 )}
@@ -198,9 +187,10 @@ export default function ProductPage({ params }: Props) {
             <ScrollReveal>
               <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary mb-3">
                     Technical Specifications
                   </h2>
+                  <div className="h-0.5 bg-secondary w-full max-w-xs mx-auto"></div>
                 </div>
                 <div className="bg-card rounded-xl shadow-lg border-2 border-secondary/30 overflow-hidden">
                   <div className="overflow-x-auto">
@@ -239,33 +229,25 @@ export default function ProductPage({ params }: Props) {
 
       {/* Section 4: Applications */}
       {currentProduct && currentProduct.typicalApplications && currentProduct.typicalApplications.trim() && (
-        <section className="w-full py-20 bg-background">
+        <section className="w-full pt-12 pb-20 bg-background">
           <div className="container mx-auto px-4">
             <ScrollReveal>
               <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary mb-3">
                     Applications
                   </h2>
+                  <div className="h-0.5 bg-secondary w-full max-w-xs mx-auto"></div>
                 </div>
                 <div className="bg-card rounded-xl shadow-lg border-2 border-secondary/30 overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <tbody>
-                        <tr className="border-b border-secondary/20 last:border-b-0">
-                          <td className="w-2/5 px-6 py-4 text-base font-semibold text-primary bg-background/50">
-                            Key Applications
-                          </td>
-                          <td className="w-3/5 px-6 py-4 text-base text-foreground bg-card">
-                            {currentProduct.typicalApplications
-                              .split('\n')
-                              .map((line: string) => line.trim())
-                              .filter(Boolean)
-                              .join(', ')}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div className="px-6 py-4">
+                    <p className="text-base text-foreground">
+                      {currentProduct.typicalApplications
+                        .split('\n')
+                        .map((line: string) => line.trim())
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
                   </div>
                 </div>
               </div>
