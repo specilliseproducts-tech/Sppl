@@ -5,7 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useEffect, useState, useCallback } from 'react';
-import { Plus, X, Trash2 } from 'lucide-react';
+import { Plus, X, Trash2, Columns } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -41,6 +41,11 @@ export function EnhancedPrincipalProductForm(props: Props) {
       description: '',
       imagePath: '',
       link: '',
+      keyFacts: [],
+      productRangeOverview: {
+        headers: [],
+        rows: [],
+      },
       products: [],
       ...props.data,
     },
@@ -128,6 +133,8 @@ export function EnhancedPrincipalProductForm(props: Props) {
       subtitle: '',
       images: [],
       keyFeatures: [],
+      keyTechnicalSpecifications: '',
+      typicalApplications: '',
       userProducts: [],
     };
     append(newProduct);
@@ -189,49 +196,13 @@ export function EnhancedPrincipalProductForm(props: Props) {
               <CardTitle>Admin Principal Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <FormField
-                control={form.control}
-                name="imagePath"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Logo</FormLabel>
-                    <FormControl>
-                      <div className="space-y-4">
-                        <MediaUploader
-                          onUpload={(urls) => {
-                            if (urls.length > 0) {
-                              field.onChange(urls[0]);
-                            }
-                          }}
-                          multiple={false}
-                        />
-                        {field.value && (
-                          <div className="flex items-center space-x-2">
-                            <Image
-                              src={field.value}
-                              alt="Company logo preview"
-                              width={80}
-                              height={80}
-                              className="w-20 h-20 object-cover rounded"
-                            />
-                            <span className="text-sm text-muted-foreground">
-                              Current logo
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              {/* Title */}
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Admin Principal Title</FormLabel>
+                    <FormLabel>Title</FormLabel>
                     <FormControl>
                       <Input placeholder="Admin Principal title" {...field} />
                     </FormControl>
@@ -240,6 +211,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
                 )}
               />
 
+              {/* Description */}
               <FormField
                 control={form.control}
                 name="description"
@@ -258,6 +230,318 @@ export function EnhancedPrincipalProductForm(props: Props) {
                 )}
               />
 
+              {/* Upload Photo */}
+              <FormField
+                control={form.control}
+                name="imagePath"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Upload Photo</FormLabel>
+                    <FormControl>
+                      <div className="space-y-4">
+                        <MediaUploader
+                          onUpload={(urls) => {
+                            if (urls.length > 0) {
+                              field.onChange(urls[0]);
+                            }
+                          }}
+                          multiple={false}
+                        />
+                        {field.value && (
+                          <div className="flex items-center space-x-2">
+                            <Image
+                              src={field.value}
+                              alt="Photo preview"
+                              width={80}
+                              height={80}
+                              className="w-20 h-20 object-cover rounded border-2 border-secondary/30"
+                            />
+                            <span className="text-sm text-muted-foreground">
+                              Current photo
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Key Facts - Optional with + button */}
+              <FormField
+                control={form.control}
+                name="keyFacts"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Key Facts (Optional)</FormLabel>
+                    <FormControl>
+                      <div className="space-y-3">
+                        {field.value && field.value.length > 0 && (
+                          <div className="space-y-2">
+                            {field.value.map((fact, index) => (
+                              <div key={index} className="flex items-center gap-2">
+                                <Input
+                                  placeholder={`Key fact ${index + 1}`}
+                                  value={fact}
+                                  onChange={(e) => {
+                                    const newFacts = [...field.value];
+                                    newFacts[index] = e.target.value;
+                                    field.onChange(newFacts);
+                                  }}
+                                />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newFacts = field.value.filter((_, i) => i !== index);
+                                    field.onChange(newFacts);
+                                  }}
+                                  className="text-destructive hover:text-destructive"
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            field.onChange([...(field.value || []), '']);
+                          }}
+                          className="w-full"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Add Key Fact
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Product Range Overview - Table */}
+              <FormField
+                control={form.control}
+                name="productRangeOverview"
+                render={({ field }) => {
+                  const tableData = field.value || { headers: [], rows: [] };
+                  
+                  const addColumn = () => {
+                    const newHeaders = [...(tableData.headers || []), ''];
+                    const newRows = (tableData.rows || []).map(row => [...row, '']);
+                    field.onChange({ headers: newHeaders, rows: newRows });
+                  };
+
+                  const removeColumn = (colIndex: number) => {
+                    const newHeaders = tableData.headers.filter((_, i) => i !== colIndex);
+                    const newRows = (tableData.rows || []).map(row => row.filter((_, i) => i !== colIndex));
+                    field.onChange({ headers: newHeaders, rows: newRows });
+                  };
+
+                  const updateHeader = (colIndex: number, value: string) => {
+                    const newHeaders = [...(tableData.headers || [])];
+                    newHeaders[colIndex] = value;
+                    field.onChange({ ...tableData, headers: newHeaders });
+                  };
+
+                  const addRow = () => {
+                    const columnCount = (tableData.headers || []).length || 1;
+                    const newRow = Array(columnCount).fill('');
+                    field.onChange({
+                      ...tableData,
+                      rows: [...(tableData.rows || []), newRow],
+                    });
+                  };
+
+                  const removeRow = (rowIndex: number) => {
+                    const newRows = (tableData.rows || []).filter((_, i) => i !== rowIndex);
+                    field.onChange({ ...tableData, rows: newRows });
+                  };
+
+                  const updateCell = (rowIndex: number, colIndex: number, value: string) => {
+                    const newRows = [...(tableData.rows || [])];
+                    if (!newRows[rowIndex]) {
+                      newRows[rowIndex] = Array((tableData.headers || []).length).fill('');
+                    }
+                    newRows[rowIndex][colIndex] = value;
+                    field.onChange({ ...tableData, rows: newRows });
+                  };
+
+                  return (
+                    <FormItem>
+                      <FormLabel>Product Range Overview (Optional)</FormLabel>
+                      <FormControl>
+                        <div className="space-y-4 border-2 border-secondary/30 rounded-lg p-4">
+                          {/* Table Controls */}
+                          <div className="flex gap-2 flex-wrap">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={addColumn}
+                            >
+                              <Columns className="mr-2 h-4 w-4" />
+                              Add Column
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={addRow}
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              Add Row
+                            </Button>
+                          </div>
+
+                          {/* Table */}
+                          {(tableData.headers && tableData.headers.length > 0) || 
+                           (tableData.rows && tableData.rows.length > 0) ? (
+                            <div className="overflow-x-auto">
+                              <table className="w-full border-collapse border border-secondary/30">
+                                <thead>
+                                  <tr>
+                                    {(tableData.headers || []).map((header, colIndex) => (
+                                      <th key={colIndex} className="border border-secondary/30 p-2 bg-card">
+                                        <div className="flex items-center gap-2">
+                                          <Input
+                                            placeholder={`Column ${colIndex + 1}`}
+                                            value={header}
+                                            onChange={(e) => updateHeader(colIndex, e.target.value)}
+                                            className="border-secondary/50"
+                                          />
+                                          <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => removeColumn(colIndex)}
+                                            className="text-destructive hover:text-destructive h-6 w-6 p-0"
+                                          >
+                                            <X className="h-3 w-3" />
+                                          </Button>
+                                        </div>
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {(tableData.rows || []).map((row, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                      {(tableData.headers || ['']).map((_, colIndex) => (
+                                        <td key={colIndex} className="border border-secondary/30 p-2">
+                                          <div className="space-y-1">
+                                            <Textarea
+                                              placeholder={`Enter content...\nFor bullet points, enter one per line:\n• Item 1\n• Item 2`}
+                                              value={row[colIndex] || ''}
+                                              onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
+                                              className="border-secondary/50 min-h-[100px] text-sm"
+                                              rows={4}
+                                            />
+                                            <p className="text-xs text-muted-foreground">
+                                              💡 Tip: Enter one bullet point per line. Use "•" or "-" for bullets.
+                                            </p>
+                                          </div>
+                                        </td>
+                                      ))}
+                                      <td className="border border-secondary/30 p-2">
+                                        <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => removeRow(rowIndex)}
+                                          className="text-destructive hover:text-destructive"
+                                        >
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <div className="text-center py-8 text-muted-foreground border-2 border-dashed border-secondary/30 rounded">
+                              <p>No table data yet. Click "Add Column" to start building your table.</p>
+                            </div>
+                          )}
+
+                          {/* Preview Section */}
+                          {(tableData.headers && tableData.headers.length > 0) && 
+                           (tableData.rows && tableData.rows.length > 0) && (
+                            <div className="mt-6 border-2 border-secondary/30 rounded-lg p-4 bg-muted/30">
+                              <h4 className="text-sm font-semibold text-secondary mb-3">Preview</h4>
+                              <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-secondary/20 bg-background text-sm">
+                                  <thead>
+                                    <tr>
+                                      {tableData.headers.map((header, colIndex) => (
+                                        <th
+                                          key={colIndex}
+                                          className="px-3 py-2 border border-secondary/20 text-left font-semibold text-secondary bg-secondary/10"
+                                        >
+                                          {header || `Column ${colIndex + 1}`}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {tableData.rows.map((row, rowIndex) => (
+                                      <tr
+                                        key={rowIndex}
+                                        className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
+                                      >
+                                        {(tableData.headers || ['']).map((_, colIndex) => {
+                                          const cellContent = row[colIndex] || '';
+                                          const hasNewlines = cellContent.includes('\n');
+                                          
+                                          return (
+                                            <td
+                                              key={colIndex}
+                                              className="px-3 py-2 border border-secondary/10 text-foreground"
+                                            >
+                                              {hasNewlines ? (
+                                                <ul className="list-none space-y-1">
+                                                  {cellContent
+                                                    .split('\n')
+                                                    .filter(line => line.trim())
+                                                    .map((line, lineIdx) => {
+                                                      const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
+                                                      return (
+                                                        <li key={lineIdx} className="flex items-start">
+                                                          <span className="text-secondary mr-2">•</span>
+                                                          <span>{cleanLine}</span>
+                                                        </li>
+                                                      );
+                                                    })}
+                                                </ul>
+                                              ) : (
+                                                <span>{cellContent || '-'}</span>
+                                              )}
+                                            </td>
+                                          );
+                                        })}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+
+              {/* Slug (Auto-generated) */}
               <FormField
                 control={form.control}
                 name="slug"
@@ -277,12 +561,13 @@ export function EnhancedPrincipalProductForm(props: Props) {
                 )}
               />
 
+              {/* Link (Optional) */}
               <FormField
                 control={form.control}
                 name="link"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Link</FormLabel>
+                    <FormLabel>Link (Optional)</FormLabel>
                     <FormControl>
                       <Input placeholder="https://example.com" {...field} />
                     </FormControl>
@@ -478,6 +763,100 @@ export function EnhancedPrincipalProductForm(props: Props) {
                         )}
                       />
 
+                      {/* Specification Table */}
+                      <FormField
+                        control={form.control}
+                        name={`products.${index}.keyTechnicalSpecifications`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Specification Table (Optional)</FormLabel>
+                            <FormControl>
+                              <div className="space-y-3">
+                                <Textarea
+                                  placeholder='Enter rows like "Wavelength Options: 266 nm (UV), 355 nm (UV) …" – one per line'
+                                  className="min-h-[100px]"
+                                  {...field}
+                                />
+                                <div className="flex flex-wrap gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      const current = field.value || '';
+                                      const prefix = current && !current.endsWith('\n') ? '\n' : '';
+                                      const template =
+                                        'Wavelength Options: 266 nm (UV), 355 nm (UV), 532 nm (Green), 1064 nm (IR)';
+                                      field.onChange(current + prefix + template);
+                                    }}
+                                  >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add Row
+                                  </Button>
+                                </div>
+                              </div>
+                            </FormControl>
+                            {/* Preview Table */}
+                            {field.value && field.value.trim() && (
+                              <div className="mt-4">
+                                <p className="text-xs text-muted-foreground mb-2">
+                                  Preview:
+                                </p>
+                                <div className="overflow-x-auto rounded-lg border border-secondary/30">
+                                  <table className="w-full border-collapse">
+                                    <tbody>
+                                      {field.value
+                                        .split('\n')
+                                        .map((line) => line.trim())
+                                        .filter(Boolean)
+                                        .map((line, idx) => {
+                                          const [label, ...rest] = line.split(':');
+                                          const value = rest.join(':').trim();
+                                          return (
+                                            <tr
+                                              key={idx}
+                                              className={
+                                                idx % 2 === 0 ? 'bg-background' : 'bg-muted/40'
+                                              }
+                                            >
+                                              <td className="w-1/3 px-3 py-2 border-b border-secondary/20 text-sm font-medium text-foreground">
+                                                {label || '-'}
+                                              </td>
+                                              <td className="px-3 py-2 border-b border-secondary/20 text-sm text-muted-foreground">
+                                                {value || ''}
+                                              </td>
+                                            </tr>
+                                          );
+                                        })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            )}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Applications */}
+                      <FormField
+                        control={form.control}
+                        name={`products.${index}.typicalApplications`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Applications (Optional)</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Enter applications, one per line"
+                                className="min-h-[80px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
                       {/* User Products Section */}
                       <div className="border-t pt-6">
                         <div className="flex justify-between items-center mb-4">
@@ -487,22 +866,25 @@ export function EnhancedPrincipalProductForm(props: Props) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const currentUserProducts = form.getValues(`products.${index}.userProducts`) || [];
+                              const currentUserProducts =
+                                form.getValues(`products.${index}.userProducts`) || [];
                               form.setValue(`products.${index}.userProducts`, [
                                 ...currentUserProducts,
                                 {
                                   slug: '',
                                   title: '',
                                   subtitle: '',
+                                  images: [],
+                                  keyFeatures: [],
+                                  keyTechnicalSpecifications: '',
+                                  typicalApplications: '',
                                   productFamily: '',
                                   components: '',
-                                  keyTechnicalSpecifications: '',
                                   applicationsTargetMarkets: '',
                                   technicalHighlights: '',
-                                  typicalApplications: '',
                                   targetMarketsEndUsers: '',
                                   keyDifferentiatorsPositioning: '',
-                                }
+                                },
                               ]);
                             }}
                           >
@@ -532,13 +914,14 @@ export function EnhancedPrincipalProductForm(props: Props) {
                               </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                              {/* Title & Subtitle */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
                                   control={form.control}
                                   name={`products.${index}.userProducts.${userProductIndex}.title`}
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>Title (Optional)</FormLabel>
+                                      <FormLabel>Title</FormLabel>
                                       <FormControl>
                                         <Input placeholder="User product title" {...field} />
                                       </FormControl>
@@ -552,7 +935,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                   name={`products.${index}.userProducts.${userProductIndex}.subtitle`}
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>Subtitle (Optional)</FormLabel>
+                                      <FormLabel>Subtitle</FormLabel>
                                       <FormControl>
                                         <Input placeholder="User product subtitle" {...field} />
                                       </FormControl>
@@ -562,103 +945,13 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 />
                               </div>
 
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.slug`}
-                                render={({ field }) => {
-                                  console.log(`🔍 Rendering User Product Slug Field [${index}][${userProductIndex}]:`, field.value);
-                                  
-                                  return (
-                                    <FormItem>
-                                      <FormLabel>User Product Slug (Auto-generated)</FormLabel>
-                                      <FormControl>
-                                        <div className="space-y-2">
-                                          {field.value ? (
-                                            <div className="flex items-center gap-2">
-                                              <div className="flex-1 px-3 py-2 bg-gray-800 border border-orange-500 rounded-md text-orange-500 font-mono text-sm font-bold">
-                                                {field.value}
-                                              </div>
-                                              <span className="text-lg text-green-500 font-bold">✓</span>
-                                            </div>
-                                          ) : (
-                                            <Input 
-                                              placeholder="Slug will appear here after entering title..." 
-                                              value=""
-                                              readOnly 
-                                              className="bg-gray-800 border-gray-700 text-gray-500"
-                                              disabled
-                                            />
-                                          )}
-                                          <div className="text-xs text-gray-400">
-                                            💡 Generated from: "{form.watch(`products.${index}.userProducts.${userProductIndex}.title`) || 'Enter title above'}"
-                                          </div>
-                                        </div>
-                                      </FormControl>
-                                      <p className="text-xs text-muted-foreground">
-                                        Automatically generated from the user product title
-                                      </p>
-                                      <FormMessage />
-                                    </FormItem>
-                                  );
-                                }}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.images`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>User Product Images (Max 2)</FormLabel>
-                                    <FormControl>
-                                      <div className="space-y-4">
-                                        <MediaUploader
-                                          onUpload={(urls) => {
-                                            const currentImages = field.value || [];
-                                            const newImages = [...currentImages, ...urls].slice(0, 2);
-                                            field.onChange(newImages);
-                                          }}
-                                          multiple={true}
-                                        />
-                                        {field.value && field.value.length > 0 && (
-                                          <div className="flex gap-4 flex-wrap">
-                                            {field.value.map((image, imgIndex) => (
-                                              <div key={imgIndex} className="relative group">
-                                                <Image
-                                                  src={image}
-                                                  alt={`User product image ${imgIndex + 1}`}
-                                                  width={120}
-                                                  height={120}
-                                                  className="w-30 h-30 object-cover rounded border"
-                                                />
-                                                <Button
-                                                  type="button"
-                                                  variant="destructive"
-                                                  size="sm"
-                                                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                  onClick={() => {
-                                                    const newImages = field.value.filter((_, i) => i !== imgIndex);
-                                                    field.onChange(newImages);
-                                                  }}
-                                                >
-                                                  <X className="h-3 w-3" />
-                                                </Button>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        )}
-                                      </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
+                              {/* Key Features */}
                               <FormField
                                 control={form.control}
                                 name={`products.${index}.userProducts.${userProductIndex}.keyFeatures`}
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Key Features (Optional)</FormLabel>
+                                    <FormLabel>Key Features</FormLabel>
                                     <FormControl>
                                       <div className="space-y-2">
                                         <Textarea
@@ -680,87 +973,76 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 )}
                               />
 
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.productFamily`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Product Family (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Input placeholder="Product family" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.components`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Components (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Textarea
-                                        placeholder="Components description"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
+                              {/* Specification Table */}
                               <FormField
                                 control={form.control}
                                 name={`products.${index}.userProducts.${userProductIndex}.keyTechnicalSpecifications`}
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Key Technical Specifications (Optional)</FormLabel>
+                                    <FormLabel>Specification Table (Optional)</FormLabel>
                                     <FormControl>
-                                      <Textarea
-                                        placeholder="Key technical specifications"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
+                                      <div className="space-y-3">
+                                        <Textarea
+                                          placeholder='Enter rows like “Wavelength Options: 266 nm (UV), 355 nm (UV) …” – one per line'
+                                          className="min-h-[80px]"
+                                          {...field}
+                                        />
+                                        <div className="flex flex-wrap gap-2">
+                                          <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                              const current = field.value || '';
+                                              const prefix = current && !current.endsWith('\n') ? '\n' : '';
+                                              const template =
+                                                'Wavelength Options: 266 nm (UV), 355 nm (UV), 532 nm (Green), 1064 nm (IR)';
+                                              field.onChange(current + prefix + template);
+                                            }}
+                                          >
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            Add Row
+                                          </Button>
+                                        </div>
+                                      </div>
                                     </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.applicationsTargetMarkets`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Applications & Target Markets (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Textarea
-                                        placeholder="Applications and target markets"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.technicalHighlights`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Technical Highlights (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Textarea
-                                        placeholder="Technical highlights"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
-                                    </FormControl>
+                                    {/* Preview Table */}
+                                    {field.value && field.value.trim() && (
+                                      <div className="mt-4">
+                                        <p className="text-xs text-muted-foreground mb-2">
+                                          Preview:
+                                        </p>
+                                        <div className="overflow-x-auto rounded-lg border border-secondary/30">
+                                          <table className="w-full border-collapse">
+                                            <tbody>
+                                              {field.value
+                                                .split('\n')
+                                                .map((line) => line.trim())
+                                                .filter(Boolean)
+                                                .map((line, idx) => {
+                                                  const [label, ...rest] = line.split(':');
+                                                  const value = rest.join(':').trim();
+                                                  return (
+                                                    <tr
+                                                      key={idx}
+                                                      className={
+                                                        idx % 2 === 0 ? 'bg-background' : 'bg-muted/40'
+                                                      }
+                                                    >
+                                                      <td className="w-1/3 px-3 py-2 border-b border-secondary/20 text-sm font-medium text-foreground">
+                                                        {label || '-'}
+                                                      </td>
+                                                      <td className="px-3 py-2 border-b border-secondary/20 text-sm text-muted-foreground">
+                                                        {value || ''}
+                                                      </td>
+                                                    </tr>
+                                                  );
+                                                })}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    )}
                                     <FormMessage />
                                   </FormItem>
                                 )}
@@ -771,46 +1053,10 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 name={`products.${index}.userProducts.${userProductIndex}.typicalApplications`}
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Typical Applications (Optional)</FormLabel>
+                                    <FormLabel>Applications (Optional)</FormLabel>
                                     <FormControl>
                                       <Textarea
-                                        placeholder="Typical applications"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.targetMarketsEndUsers`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Target Markets / End Users (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Textarea
-                                        placeholder="Target markets and end users"
-                                        className="min-h-[80px]"
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              <FormField
-                                control={form.control}
-                                name={`products.${index}.userProducts.${userProductIndex}.keyDifferentiatorsPositioning`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Key Differentiators & Positioning (Optional)</FormLabel>
-                                    <FormControl>
-                                      <Textarea
-                                        placeholder="Key differentiators and positioning"
+                                        placeholder="Enter applications, one per line"
                                         className="min-h-[80px]"
                                         {...field}
                                       />

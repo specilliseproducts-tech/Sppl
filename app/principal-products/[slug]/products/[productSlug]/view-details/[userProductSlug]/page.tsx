@@ -97,6 +97,117 @@ export default function ViewDetailsPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Admin Principal Information */}
+      {principalProduct && (
+        <section className="w-full pt-16 pb-6 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <ScrollReveal>
+                <div className="grid grid-cols-1 md:grid-cols-[260px,1fr] gap-8 items-start rounded-2xl border border-secondary/20 bg-card/60 p-6 shadow-sm">
+                  {/* Principal Image */}
+                  <div className="flex justify-center">
+                    <div className="relative w-60 h-60 rounded-xl border border-secondary/30 bg-background flex items-center justify-center overflow-hidden">
+                      {principalProduct.imagePath ? (
+                        <Image
+                          src={principalProduct.imagePath}
+                          alt={principalProduct.title}
+                          fill
+                          className="object-contain p-4"
+                        />
+                      ) : (
+                        <span className="text-muted-foreground text-sm">
+                          No image available
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Principal Content */}
+                  <div className="space-y-6">
+                    {/* Title & Description */}
+                    <div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">
+                        {principalProduct.title}
+                      </h2>
+                      <p className="text-muted-foreground text-sm md:text-base">
+                        {principalProduct.description}
+                      </p>
+                    </div>
+
+                    {/* Key Facts */}
+                    {principalProduct.keyFacts && principalProduct.keyFacts.length > 0 && (
+                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
+                        <h3 className="text-sm font-semibold text-secondary mb-3">
+                          Key Facts
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {principalProduct.keyFacts.map((fact: string, idx: number) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-medium"
+                            >
+                              {fact}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Product Range Overview Table */}
+                    {principalProduct.productRangeOverview && (
+                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
+                        <h3 className="text-sm font-semibold text-secondary mb-3">
+                          Product Range Overview
+                        </h3>
+                        <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-card">
+                          <table className="w-full border-collapse">
+                            <thead>
+                              <tr>
+                                {(principalProduct.productRangeOverview.headers || []).map(
+                                  (header: string, idx: number) => (
+                                    <th
+                                      key={idx}
+                                      className="px-3 py-2 border-b border-secondary/20 text-left text-xs font-semibold text-foreground bg-muted/50"
+                                    >
+                                      {header}
+                                    </th>
+                                  ),
+                                )}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(principalProduct.productRangeOverview.rows || []).map(
+                                (row: string[], rowIndex: number) => (
+                                  <tr
+                                    key={rowIndex}
+                                    className={rowIndex % 2 === 0 ? 'bg-background' : 'bg-muted/40'}
+                                  >
+                                    {(principalProduct.productRangeOverview.headers || []).map(
+                                      (_: string, colIndex: number) => (
+                                        <td
+                                          key={colIndex}
+                                          className="px-3 py-2 border-b border-secondary/10 text-xs text-muted-foreground"
+                                        >
+                                          {row?.[colIndex] || ''}
+                                        </td>
+                                      ),
+                                    )}
+                                  </tr>
+                                ),
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
         <div className="container mx-auto px-4">
@@ -157,14 +268,16 @@ export default function ViewDetailsPage({ params }: Props) {
                   {displayUserProduct?.keyFeatures && displayUserProduct.keyFeatures.length > 0 && (
                     <div>
                       <h3 className="text-xl font-semibold text-secondary mb-4">Key Features</h3>
-                      <ul className="space-y-3">
+                      <div className="flex flex-wrap gap-2">
                         {displayUserProduct.keyFeatures.map((feature: string, idx: number) => (
-                          <li key={idx} className="flex items-start gap-3 text-foreground">
-                            <span className="text-secondary font-bold mt-1">✓</span>
-                            <span>{feature}</span>
-                          </li>
+                          <span
+                            key={idx}
+                            className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-3 py-1 text-sm font-medium"
+                          >
+                            {feature}
+                          </span>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
 
@@ -201,134 +314,54 @@ export default function ViewDetailsPage({ params }: Props) {
                 </div>
 
                 <div className="space-y-10">
-                  {/* Key Technical Specifications */}
+                  {/* Specification Table */}
                   {displayUserProduct.keyTechnicalSpecifications && (
                     <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Key Technical Specifications</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.keyTechnicalSpecifications.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
+                      <h3 className="text-xl font-bold text-secondary mb-6">Specification Table</h3>
+                      <div className="bg-card rounded-lg p-0 border-2 border-secondary/30 overflow-hidden">
+                        <table className="w-full border-collapse">
+                          <tbody>
+                            {displayUserProduct.keyTechnicalSpecifications
+                              .split('\n')
+                              .map((item: string, idx: number) => {
+                                const line = item.trim();
+                                if (!line) return null;
+                                const [label, ...rest] = line.split(':');
+                                const value = rest.join(':').trim();
+                                return (
+                                  <tr key={idx} className={idx % 2 === 0 ? 'bg-background' : 'bg-muted/40'}>
+                                    <td className="w-1/3 border-b border-secondary/20 px-4 py-3 font-medium text-foreground">
+                                      {label || '-'}
+                                    </td>
+                                    <td className="border-b border-secondary/20 px-4 py-3 text-muted-foreground">
+                                      {value || ''}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   )}
 
-                  {/* Applications & Target Markets */}
-                  {displayUserProduct.applicationsTargetMarkets && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Applications & Target Markets</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.applicationsTargetMarkets.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Technical Highlights */}
-                  {displayUserProduct.technicalHighlights && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Technical Highlights</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.technicalHighlights.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Typical Applications */}
+                  {/* Applications */}
                   {displayUserProduct.typicalApplications && (
                     <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Typical Applications</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.typicalApplications.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Target Markets / End Users */}
-                  {displayUserProduct.targetMarketsEndUsers && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Target Markets / End Users</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.targetMarketsEndUsers.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Key Differentiators & Positioning */}
-                  {displayUserProduct.keyDifferentiatorsPositioning && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Key Differentiators & Positioning</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.keyDifferentiatorsPositioning.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Product Family */}
-                  {displayUserProduct.productFamily && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Product Family</h3>
+                      <h3 className="text-xl font-bold text-secondary mb-6">Applications</h3>
                       <div className="bg-card rounded-lg p-6 border-2 border-secondary/30">
-                        <div className="flex items-start gap-3">
-                          <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                          <span className="text-foreground">{displayUserProduct.productFamily}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Components */}
-                  {displayUserProduct.components && (
-                    <div>
-                      <h3 className="text-xl font-bold text-secondary mb-6">Components</h3>
-                      <div className="bg-card rounded-lg p-6 border-2 border-secondary/30 space-y-3">
-                        {displayUserProduct.components.split('\n').map((item: string, idx: number) => (
-                          item.trim() && (
-                            <div key={idx} className="flex items-start gap-3">
-                              <span className="text-secondary font-bold text-lg mt-1">✓</span>
-                              <span className="text-foreground">{item.trim()}</span>
-                            </div>
-                          )
-                        ))}
+                        <ul className="space-y-2">
+                          {displayUserProduct.typicalApplications.split('\n').map((item: string, idx: number) => {
+                            const line = item.trim();
+                            if (!line) return null;
+                            return (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className="mt-1 text-secondary">➜</span>
+                                <span className="text-foreground text-sm">{line}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
                       </div>
                     </div>
                   )}

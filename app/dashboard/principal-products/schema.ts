@@ -24,7 +24,15 @@ export const productSchema = z.object({
   subtitle: z.string().optional(),
   images: z.array(z.string()).max(2, 'Maximum 2 images allowed').optional().default([]),
   keyFeatures: z.array(z.string()).optional().default([]),
+  keyTechnicalSpecifications: z.string().optional(),
+  typicalApplications: z.string().optional(),
   userProducts: z.array(userProductSchema).optional().default([]),
+});
+
+// Product Range Overview Table Schema
+export const productRangeOverviewTableSchema = z.object({
+  headers: z.array(z.string()).default([]),
+  rows: z.array(z.array(z.string())).default([]),
 });
 
 export const principalProductInsertSchema = z.object({
@@ -32,7 +40,9 @@ export const principalProductInsertSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   imagePath: z.string().min(1, 'Image path is required'),
-  link: z.string().min(1, 'Link is required'),
+  link: z.string().optional().default(''),
+  keyFacts: z.array(z.string()).optional().default([]),
+  productRangeOverview: productRangeOverviewTableSchema.optional(),
   products: z.array(productSchema).optional().default([]),
 });
 
@@ -43,6 +53,8 @@ export const principalProductSelectSchema = z.object({
   description: z.string(),
   imagePath: z.string(),
   link: z.string(),
+  keyFacts: z.array(z.string()).optional().default([]),
+  productRangeOverview: productRangeOverviewTableSchema.optional(),
   products: z.array(productSchema).optional().default([]),
   createdAt: z.date(),
   updatedAt: z.date(),

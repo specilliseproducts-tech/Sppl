@@ -73,11 +73,12 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Admin Principal Information / Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <ScrollReveal>
+              {/* Back Button */}
               <div className="flex items-center gap-4 mb-6 justify-start">
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/principal-products">
@@ -86,34 +87,52 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                   </Link>
                 </Button>
               </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
-                {/* Image Section - Left */}
-                <div className="flex justify-center">
-                  <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
-                    <Image
-                      src={currentProduct.imagePath || '/placeholder.svg'}
-                      alt={currentProduct.title}
-                      fill
-                      className="object-contain p-4"
-                    />
+
+              {/* Principal Info Card */}
+              <div className="mt-8 rounded-2xl border border-secondary/20 bg-card/80 p-6 lg:p-8 shadow-sm">
+                <div className="grid grid-cols-1 lg:grid-cols-[280px,1fr] gap-10 items-start">
+                  {/* Image Section - Left */}
+                  <div className="flex justify-center">
+                    <div className="relative w-64 h-64 rounded-xl overflow-hidden bg-background border border-secondary/30 flex items-center justify-center">
+                      <Image
+                        src={currentProduct.imagePath || '/placeholder.svg'}
+                        alt={currentProduct.title}
+                        fill
+                        className="object-contain p-4"
+                      />
+                    </div>
                   </div>
-                </div>
-                
-                {/* Content Section - Right */}
-                <div className="space-y-6">
-                  {/* Title Section */}
-                  <div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
-                      {currentProduct.title}
-                    </h1>
-                  </div>
-                  
-                  {/* Description Section */}
-                  <div>
-                    <p className="text-lg text-muted-foreground">
-                      {currentProduct.description}
-                    </p>
+
+                  {/* Content Section - Right */}
+                  <div className="space-y-6">
+                    {/* Title & Description */}
+                    <div>
+                      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
+                        {currentProduct.title}
+                      </h1>
+                      <p className="text-base md:text-lg text-muted-foreground">
+                        {currentProduct.description}
+                      </p>
+                    </div>
+
+                    {/* Key Facts */}
+                    {currentProduct.keyFacts && currentProduct.keyFacts.length > 0 && (
+                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
+                        <h3 className="text-sm font-semibold text-secondary mb-3">
+                          Key Facts
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {currentProduct.keyFacts.map((fact: string, idx: number) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-medium"
+                            >
+                              {fact}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -122,6 +141,92 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
         </div>
       </section>
 
+      {/* Product Range Overview Section */}
+      {currentProduct.productRangeOverview && 
+       (currentProduct.productRangeOverview.headers?.length > 0 || currentProduct.productRangeOverview.rows?.length > 0) && (
+        <section className="w-full py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+                    Product Range Overview
+                  </h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    Comprehensive overview of our product range and specifications.
+                  </p>
+                </div>
+                
+                <div className="bg-card rounded-xl shadow-lg p-6 border-2 border-secondary/30">
+                  <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-background">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr>
+                          {(currentProduct.productRangeOverview.headers || []).map(
+                            (header: string, idx: number) => (
+                              <th
+                                key={idx}
+                                className="px-4 py-3 border-b-2 border-secondary/30 text-left text-sm font-semibold text-secondary bg-secondary/10"
+                              >
+                                {header}
+                              </th>
+                            ),
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(currentProduct.productRangeOverview.rows || []).map(
+                          (row: string[], rowIndex: number) => (
+                            <tr
+                              key={rowIndex}
+                              className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
+                            >
+                              {(currentProduct.productRangeOverview.headers || ['']).map(
+                                (_: string, colIndex: number) => {
+                                  const cellContent = row?.[colIndex] || '';
+                                  // Check if content has newlines (bullet points)
+                                  const hasNewlines = cellContent.includes('\n');
+                                  
+                                  return (
+                                    <td
+                                      key={colIndex}
+                                      className="px-4 py-3 border-b border-secondary/10 text-sm text-foreground"
+                                    >
+                                      {hasNewlines ? (
+                                        <ul className="list-none space-y-1">
+                                          {cellContent
+                                            .split('\n')
+                                            .filter(line => line.trim())
+                                            .map((line, lineIdx) => {
+                                              // Remove existing bullet symbols if present
+                                              const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
+                                              return (
+                                                <li key={lineIdx} className="flex items-start">
+                                                  <span className="text-secondary mr-2">•</span>
+                                                  <span>{cleanLine}</span>
+                                                </li>
+                                              );
+                                            })}
+                                        </ul>
+                                      ) : (
+                                        <span>{cellContent}</span>
+                                      )}
+                                    </td>
+                                  );
+                                },
+                              )}
+                            </tr>
+                          ),
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
 
       {/* Master Products Section */}
       {masterProducts && masterProducts.length > 0 && (
