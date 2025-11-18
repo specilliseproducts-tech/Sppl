@@ -55,6 +55,7 @@ export default function ViewDetailsPage({ params }: Props) {
             );
 
             console.log('Found User Product:', userProduct);
+            console.log('User Product Images:', userProduct?.images);
 
             if (userProduct) {
               setDisplayUserProduct(userProduct);
@@ -97,116 +98,7 @@ export default function ViewDetailsPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Admin Principal Information */}
-      {principalProduct && (
-        <section className="w-full pt-16 pb-6 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <ScrollReveal>
-                <div className="grid grid-cols-1 md:grid-cols-[260px,1fr] gap-8 items-start rounded-2xl border border-secondary/20 bg-card/60 p-6 shadow-sm">
-                  {/* Principal Image */}
-                  <div className="flex justify-center">
-                    <div className="relative w-60 h-60 rounded-xl border border-secondary/30 bg-background flex items-center justify-center overflow-hidden">
-                      {principalProduct.imagePath ? (
-                        <Image
-                          src={principalProduct.imagePath}
-                          alt={principalProduct.title}
-                          fill
-                          className="object-contain p-4"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground text-sm">
-                          No image available
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Principal Content */}
-                  <div className="space-y-6">
-                    {/* Title & Description */}
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">
-                        {principalProduct.title}
-                      </h2>
-                      <p className="text-muted-foreground text-sm md:text-base">
-                        {principalProduct.description}
-                      </p>
-                    </div>
-
-                    {/* Key Facts */}
-                    {principalProduct.keyFacts && principalProduct.keyFacts.length > 0 && (
-                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
-                        <h3 className="text-sm font-semibold text-secondary mb-3">
-                          Key Facts
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                          {principalProduct.keyFacts.map((fact: string, idx: number) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-medium"
-                            >
-                              {fact}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Product Range Overview Table */}
-                    {principalProduct.productRangeOverview && (
-                      <div className="rounded-xl bg-secondary/5 border border-secondary/20 p-4">
-                        <h3 className="text-sm font-semibold text-secondary mb-3">
-                          Product Range Overview
-                        </h3>
-                        <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-card">
-                          <table className="w-full border-collapse">
-                            <thead>
-                              <tr>
-                                {(principalProduct.productRangeOverview.headers || []).map(
-                                  (header: string, idx: number) => (
-                                    <th
-                                      key={idx}
-                                      className="px-3 py-2 border-b border-secondary/20 text-left text-xs font-semibold text-foreground bg-muted/50"
-                                    >
-                                      {header}
-                                    </th>
-                                  ),
-                                )}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {(principalProduct.productRangeOverview.rows || []).map(
-                                (row: string[], rowIndex: number) => (
-                                  <tr
-                                    key={rowIndex}
-                                    className={rowIndex % 2 === 0 ? 'bg-background' : 'bg-muted/40'}
-                                  >
-                                    {(principalProduct.productRangeOverview.headers || []).map(
-                                      (_: string, colIndex: number) => (
-                                        <td
-                                          key={colIndex}
-                                          className="px-3 py-2 border-b border-secondary/10 text-xs text-muted-foreground"
-                                        >
-                                          {row?.[colIndex] || ''}
-                                        </td>
-                                      ),
-                                    )}
-                                  </tr>
-                                ),
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </ScrollReveal>
-            </div>
-          </div>
-        </section>
-      )}
+      
 
       {/* Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
@@ -226,25 +118,69 @@ export default function ViewDetailsPage({ params }: Props) {
                 {/* Image Section - Left */}
                 <div className="flex justify-center">
                   {displayUserProduct?.images && displayUserProduct.images.length > 0 ? (
-                    <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
-                      <Image
-                        src={displayUserProduct.images[0]}
-                        alt={displayUserProduct?.title || 'User product'}
-                        fill
-                        className="object-contain p-4"
-                      />
+                    // Show all user product images
+                    <div className="w-full max-w-md space-y-4">
+                      {displayUserProduct.images.length === 1 ? (
+                        // Single image
+                        <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
+                          <Image
+                            src={displayUserProduct.images[0]}
+                            alt={displayUserProduct?.title || 'User product'}
+                            fill
+                            className="object-contain p-4"
+                          />
+                        </div>
+                      ) : (
+                        // Multiple images - show in grid
+                        <div className="grid grid-cols-1 gap-4">
+                          {displayUserProduct.images.map((image: string, idx: number) => (
+                            <div
+                              key={idx}
+                              className="relative h-80 w-full rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center"
+                            >
+                              <Image
+                                src={image}
+                                alt={`${displayUserProduct?.title || 'User product'} - Image ${idx + 1}`}
+                                fill
+                                className="object-contain p-4"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ) : currentProduct?.images && currentProduct.images.length > 0 ? (
-                    <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
-                      <Image
-                        src={currentProduct.images[0]}
-                        alt={currentProduct?.title || 'Master product'}
-                        fill
-                        className="object-contain p-4"
-                      />
+                    // Fallback to master product images
+                    <div className="w-full max-w-md space-y-4">
+                      {currentProduct.images.length === 1 ? (
+                        <div className="relative h-96 w-full rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
+                          <Image
+                            src={currentProduct.images[0]}
+                            alt={currentProduct?.title || 'Master product'}
+                            fill
+                            className="object-contain p-4"
+                          />
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-4">
+                          {currentProduct.images.map((image: string, idx: number) => (
+                            <div
+                              key={idx}
+                              className="relative h-80 w-full rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center"
+                            >
+                              <Image
+                                src={image}
+                                alt={`${currentProduct?.title || 'Master product'} - Image ${idx + 1}`}
+                                fill
+                                className="object-contain p-4"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className="relative h-96 w-96 rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
+                    <div className="relative h-96 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-card border-2 border-secondary/30 flex items-center justify-center">
                       <span className="text-muted-foreground">No images available</span>
                     </div>
                   )}

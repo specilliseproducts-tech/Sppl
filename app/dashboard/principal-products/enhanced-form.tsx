@@ -945,6 +945,57 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 />
                               </div>
 
+                              {/* Images */}
+                              <FormField
+                                control={form.control}
+                                name={`products.${index}.userProducts.${userProductIndex}.images`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>User Product Images (Max 2)</FormLabel>
+                                    <FormControl>
+                                      <div className="space-y-4">
+                                        <MediaUploader
+                                          onUpload={(urls) => {
+                                            const currentImages = field.value || [];
+                                            const newImages = [...currentImages, ...urls].slice(0, 2);
+                                            field.onChange(newImages);
+                                          }}
+                                          multiple={true}
+                                        />
+                                        {field.value && field.value.length > 0 && (
+                                          <div className="flex gap-4 flex-wrap">
+                                            {field.value.map((image, imgIndex) => (
+                                              <div key={imgIndex} className="relative group">
+                                                <Image
+                                                  src={image}
+                                                  alt={`User product image ${imgIndex + 1}`}
+                                                  width={120}
+                                                  height={120}
+                                                  className="w-30 h-30 object-cover rounded border-2 border-secondary/30"
+                                                />
+                                                <Button
+                                                  type="button"
+                                                  variant="destructive"
+                                                  size="sm"
+                                                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                  onClick={() => {
+                                                    const newImages = field.value.filter((_, i) => i !== imgIndex);
+                                                    field.onChange(newImages);
+                                                  }}
+                                                >
+                                                  <X className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
                               {/* Key Features */}
                               <FormField
                                 control={form.control}
