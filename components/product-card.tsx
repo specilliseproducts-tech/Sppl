@@ -17,6 +17,7 @@ interface ProductCardProps {
   image: string
   features: string[]
   color?: string
+  href?: string // Optional custom href, defaults to /products/${slug}
 }
 
 export default function ProductCard({
@@ -27,6 +28,7 @@ export default function ProductCard({
   image,
   features,
   color = "#F9B208", // Golden Yellow
+  href,
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -97,7 +99,7 @@ export default function ProductCard({
         </div>
 
         <Button asChild variant="outline" className="w-full group border-secondary text-secondary hover:bg-secondary/10">
-          <Link href={`/products/${slug}`}>
+          <Link href={href || `/products/${slug}`}>
             Learn More
             <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
           </Link>
