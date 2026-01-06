@@ -60,6 +60,30 @@ export function EnhancedPrincipalProductForm(props: Props) {
   const titleValue = form.watch('title');
   const productsValue = form.watch('products');
 
+  // Ensure customSections are initialized for all products when data is loaded
+  useEffect(() => {
+    if (props.data?.products && Array.isArray(props.data.products)) {
+      const productsWithCustomSections = props.data.products.map((product: any) => ({
+        ...product,
+        customSections: (product.customSections || []).map((section: any) => {
+          // Migrate old format (description) to new format (descriptions array)
+          if (section.description && !section.descriptions) {
+            return {
+              ...section,
+              descriptions: [section.description],
+            };
+          }
+          // Ensure descriptions array exists
+          return {
+            ...section,
+            descriptions: section.descriptions || [],
+          };
+        }),
+      }));
+      form.setValue('products', productsWithCustomSections, { shouldDirty: false });
+    }
+  }, [props.data?.products, form]);
+
   // Generate principal slug
   useEffect(() => {
     if (titleValue && titleValue.trim() && !props.data?.slug) {
@@ -135,6 +159,8 @@ export function EnhancedPrincipalProductForm(props: Props) {
       keyFeatures: [],
       keyTechnicalSpecifications: '',
       typicalApplications: '',
+      customSections: [],
+      primaryApplicationDomains: [],
       userProducts: [],
     };
     append(newProduct);
@@ -151,9 +177,32 @@ export function EnhancedPrincipalProductForm(props: Props) {
     if (data.products && Array.isArray(data.products)) {
       data.products = data.products.map((product, idx) => {
         const productSlug = product.slug || generateSlug(product.title || `product-${idx}`);
+        
+        // Filter out empty custom sections and empty descriptions
+        const validCustomSections = (product.customSections || [])
+          .map((section: any) => {
+            // Filter out empty descriptions within each section
+            const validDescriptions = (section.descriptions || []).filter(
+              (desc: string) => desc && desc.trim()
+            );
+            return {
+              ...section,
+              descriptions: validDescriptions,
+            };
+          })
+          .filter(
+            (section: any) => 
+              section.title && 
+              section.title.trim() && 
+              section.descriptions && 
+              section.descriptions.length > 0
+          );
+        
         return {
           ...product,
           slug: productSlug,
+          // Ensure customSections is preserved and filtered
+          customSections: validCustomSections,
           userProducts: product.userProducts?.map((userProduct, uIdx) => {
             const userSlug = userProduct.slug || generateSlug(userProduct.title || `user-product-${uIdx}`);
             return {
@@ -176,6 +225,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
       products: data.products?.map(p => ({
         title: p.title,
         slug: p.slug,
+        customSections: p.customSections,
         userProducts: p.userProducts?.map(up => ({
           title: up.title,
           slug: up.slug,
@@ -851,6 +901,235 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 className="min-h-[80px]"
                                 {...field}
                               />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Custom Sections */}
+                      <FormField
+                        control={form.control}
+                        name={`products.${index}.customSections`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Custom Sections (Optional)</FormLabel>
+                            <FormControl>
+                              <div className="space-y-4">
+                                {field.value && field.value.length > 0 && (
+                                  <div className="space-y-4">
+                                    {field.value.map((section, sectionIndex) => (
+                                      <Card key={sectionIndex} className="border-dashed">
+                                        <CardHeader className="pb-3">
+                                          <div className="flex justify-between items-center">
+                                            <CardTitle className="text-sm">
+                                              Custom Section {sectionIndex + 1}
+                                            </CardTitle>
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => {
+                                                const newSections = field.value.filter(
+                                                  (_, i) => i !== sectionIndex
+                                                );
+                                                field.onChange(newSections);
+                                              }}
+                                              className="text-destructive hover:text-destructive"
+                                            >
+                                              <X className="h-4 w-4" />
+                                            </Button>
+                                          </div>
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                          <Input
+                                            placeholder="Section Title"
+                                            value={section.title || ''}
+                                            onChange={(e) => {
+                                              const newSections = [...field.value];
+                                              newSections[sectionIndex] = {
+                                                ...newSections[sectionIndex],
+                                                title: e.target.value,
+                                              };
+                                              field.onChange(newSections);
+                                            }}
+                                          />
+                                          
+                                          {/* Multiple Descriptions */}
+                                          <div className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                              <label className="text-sm font-medium">Descriptions</label>
+                                              <span className="text-xs text-muted-foreground">
+                                                Use <strong>**text**</strong> for bold formatting
+                                              </span>
+                                            </div>
+                                            {(section.descriptions || []).map((desc: string, descIndex: number) => (
+                                              <div key={descIndex} className="flex items-start gap-2">
+                                                <div className="flex-1 space-y-1">
+                                                  <Textarea
+                                                    placeholder={`Description ${descIndex + 1}`}
+                                                    className="min-h-[80px] w-full"
+                                                    value={desc}
+                                                    onChange={(e) => {
+                                                      const newSections = [...field.value];
+                                                      const newDescriptions = [...(newSections[sectionIndex].descriptions || [])];
+                                                      newDescriptions[descIndex] = e.target.value;
+                                                      newSections[sectionIndex] = {
+                                                        ...newSections[sectionIndex],
+                                                        descriptions: newDescriptions,
+                                                      };
+                                                      field.onChange(newSections);
+                                                    }}
+                                                  />
+                                                  {/* Preview of bold text */}
+                                                  {desc && desc.includes('**') && (
+                                                    <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded border border-secondary/20">
+                                                      <span className="font-semibold">Preview: </span>
+                                                      <span dangerouslySetInnerHTML={{
+                                                        __html: desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                                      }} />
+                                                    </div>
+                                                  )}
+                                                </div>
+                                                <Button
+                                                  type="button"
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={() => {
+                                                    const newSections = [...field.value];
+                                                    const newDescriptions = (newSections[sectionIndex].descriptions || []).filter(
+                                                      (_, i) => i !== descIndex
+                                                    );
+                                                    newSections[sectionIndex] = {
+                                                      ...newSections[sectionIndex],
+                                                      descriptions: newDescriptions,
+                                                    };
+                                                    field.onChange(newSections);
+                                                  }}
+                                                  className="text-destructive hover:text-destructive mt-2"
+                                                >
+                                                  <X className="h-4 w-4" />
+                                                </Button>
+                                              </div>
+                                            ))}
+                                            <Button
+                                              type="button"
+                                              variant="outline"
+                                              size="sm"
+                                              onClick={() => {
+                                                const newSections = [...field.value];
+                                                const currentDescriptions = newSections[sectionIndex].descriptions || [];
+                                                newSections[sectionIndex] = {
+                                                  ...newSections[sectionIndex],
+                                                  descriptions: [...currentDescriptions, ''],
+                                                };
+                                                field.onChange(newSections);
+                                              }}
+                                              className="w-full"
+                                            >
+                                              <Plus className="mr-2 h-4 w-4" />
+                                              Add Description
+                                            </Button>
+                                          </div>
+                                        </CardContent>
+                                      </Card>
+                                    ))}
+                                  </div>
+                                )}
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    field.onChange([
+                                      ...(field.value || []),
+                                      { title: '', descriptions: [''] },
+                                    ]);
+                                  }}
+                                  className="w-full"
+                                >
+                                  <Plus className="mr-2 h-4 w-4" />
+                                  Add Custom Section
+                                </Button>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Primary Application Domains */}
+                      <FormField
+                        control={form.control}
+                        name={`products.${index}.primaryApplicationDomains`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Primary Application Domains (Optional)</FormLabel>
+                            <FormControl>
+                              <div className="space-y-3">
+                                {field.value && field.value.length > 0 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    {field.value.map((domain: string, domainIndex: number) => (
+                                      <div
+                                        key={domainIndex}
+                                        className="flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full border border-secondary/30"
+                                      >
+                                        <span className="text-sm font-medium">{domain}</span>
+                                        <Button
+                                          type="button"
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => {
+                                            const newDomains = field.value.filter(
+                                              (_, i) => i !== domainIndex
+                                            );
+                                            field.onChange(newDomains);
+                                          }}
+                                          className="h-5 w-5 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        >
+                                          <X className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                <div className="flex gap-2">
+                                  <Input
+                                    placeholder="Enter application domain (e.g., Microfluidics)"
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        const input = e.currentTarget;
+                                        const value = input.value.trim();
+                                        if (value) {
+                                          field.onChange([...(field.value || []), value]);
+                                          input.value = '';
+                                        }
+                                      }
+                                    }}
+                                    className="flex-1"
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                      const value = input?.value.trim();
+                                      if (value) {
+                                        field.onChange([...(field.value || []), value]);
+                                        input.value = '';
+                                      }
+                                    }}
+                                  >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add Domain
+                                  </Button>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  Add application domains that this master product serves. Press Enter or click "Add Domain" to add.
+                                </p>
+                              </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>

@@ -20,6 +20,11 @@ const userProductSchema = z.object({
   keyDifferentiatorsPositioning: z.string().optional(),
 });
 
+const customSectionSchema = z.object({
+  title: z.string().min(1, 'Section title is required'),
+  descriptions: z.array(z.string().min(1, 'Description cannot be empty')).min(1, 'At least one description is required'),
+});
+
 const productSchema = z.object({
   id: z.string().optional(),
   slug: z.string().optional(),
@@ -29,6 +34,8 @@ const productSchema = z.object({
   keyFeatures: z.array(z.string()).optional().default([]),
   keyTechnicalSpecifications: z.string().optional(),
   typicalApplications: z.string().optional(),
+  customSections: z.array(customSectionSchema).optional().default([]),
+  primaryApplicationDomains: z.array(z.string()).optional().default([]),
   userProducts: z.array(userProductSchema).optional().default([]),
 });
 

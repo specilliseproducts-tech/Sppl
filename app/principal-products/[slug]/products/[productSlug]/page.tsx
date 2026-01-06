@@ -64,6 +64,16 @@ export default function ProductPage({ params }: Props) {
           }
 
           if (product) {
+            // Ensure customSections is initialized if missing
+            if (!product.customSections) {
+              product.customSections = [];
+            }
+            console.log('📦 Product data loaded:', {
+              title: product.title,
+              slug: product.slug,
+              customSections: product.customSections,
+              customSectionsCount: product.customSections?.length || 0,
+            });
             setCurrentProduct(product);
           } else {
             console.warn(`Product not found with slug: ${params.productSlug}`);
@@ -256,7 +266,73 @@ export default function ProductPage({ params }: Props) {
         </section>
       )}
 
-      {/* Section 5: User Products */}
+      {/* Section 5: Custom Sections */}
+      {currentProduct && currentProduct.customSections && currentProduct.customSections.length > 0 && (
+        <section className="w-full py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="max-w-5xl mx-auto space-y-8">
+                {currentProduct.customSections.map((section: any, index: number) => {
+                  // Handle backward compatibility: migrate old format (description) to new format (descriptions)
+                  const descriptions = section.descriptions || (section.description ? [section.description] : []);
+                  
+                  // Helper function to parse markdown-style bold text (**text**)
+                  const parseBoldText = (text: string) => {
+                    // Replace **text** with <strong>text</strong>
+                    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                  };
+                  
+                  return (
+                    <div key={index} className="bg-card rounded-xl shadow-lg border-2 border-secondary/30 overflow-hidden">
+                      <div className="px-6 py-6">
+                        <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4">
+                          {section.title}
+                        </h2>
+                        <div className="prose prose-lg max-w-none space-y-3">
+                          {descriptions.map((desc: string, descIndex: number) => (
+                            <p 
+                              key={descIndex} 
+                              className="text-base text-foreground whitespace-pre-wrap [&_strong]:font-bold [&_strong]:text-primary"
+                              dangerouslySetInnerHTML={{ __html: parseBoldText(desc) }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* Section 6: Primary Application Domains */}
+      {currentProduct && currentProduct.primaryApplicationDomains && currentProduct.primaryApplicationDomains.length > 0 && (
+        <section className="w-full py-20 bg-background border-t-2 border-secondary/30">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">
+                  Primary Application Domains
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {currentProduct.primaryApplicationDomains.map((domain: string, index: number) => (
+                    <div
+                      key={index}
+                      className="bg-gray-800 text-white px-6 py-4 rounded-lg text-center font-medium text-sm md:text-base hover:bg-gray-700 transition-colors duration-200 cursor-default"
+                    >
+                      {domain}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* Section 7: User Products */}
       {currentProduct && (
         <section className="w-full py-20 bg-background border-t-2 border-secondary/30">
           <div className="container mx-auto px-4">
