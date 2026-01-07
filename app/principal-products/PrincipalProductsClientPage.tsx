@@ -65,43 +65,117 @@ export default function PrincipalProductsClientPage() {
                   className="scroll-mt-20"
                 >
                   <ScrollReveal direction="left">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                      {/* Logo - Left Side */}
-                      <div className="relative h-80 rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
-                        <Image
-                          src={product.imagePath || '/placeholder.svg'}
-                          alt={product.title}
-                          fill
-                          className="object-contain p-4"
-                        />
+                    <div className="flex flex-col gap-8">
+                      {/* Title */}
+                      <h3 className="text-2xl md:text-3xl font-bold text-primary text-center">
+                        {product.title}
+                      </h3>
+                      
+                      {/* Image */}
+                      <div className="flex justify-center">
+                        <div className="relative h-80 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
+                          <Image
+                            src={product.imagePath || '/placeholder.svg'}
+                            alt={product.title}
+                            fill
+                            className="object-contain p-4"
+                          />
+                        </div>
                       </div>
 
-                      {/* Content - Right Side */}
-                      <div>
-                        <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-                          {product.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-6">
-                          {product.description}
-                        </p>
-                        <div className="flex gap-3">
-                          <Button asChild className="group">
-                            <Link
-                              href={product.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              Learn More
-                              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                            </Link>
-                          </Button>
-                          <Button variant="outline" asChild className="group">
-                            <Link href={`/principal-products/${product.slug}`}>
-                              View Details
-                              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
-                            </Link>
-                          </Button>
+                      {/* Product Range Overview Table */}
+                      {product.productRangeOverview && 
+                       (product.productRangeOverview.headers?.length > 0 || product.productRangeOverview.rows?.length > 0) && (
+                        <div>
+                          <h4 className="text-xl font-semibold text-primary mb-4 text-center">
+                            Product Range Overview
+                          </h4>
+                          <div className="bg-card rounded-xl shadow-lg p-4 border-2 border-secondary/30">
+                            <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-background">
+                              <table className="w-full border-collapse">
+                                <thead>
+                                  <tr>
+                                    {(product.productRangeOverview.headers || []).map(
+                                      (header: string, idx: number) => (
+                                        <th
+                                          key={idx}
+                                          className="px-4 py-3 border-b-2 border-secondary/30 text-left text-sm font-semibold text-secondary bg-secondary/10"
+                                        >
+                                          {header}
+                                        </th>
+                                      ),
+                                    )}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {(product.productRangeOverview.rows || []).map(
+                                    (row: string[], rowIndex: number) => (
+                                      <tr
+                                        key={rowIndex}
+                                        className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
+                                      >
+                                        {(product.productRangeOverview.headers || ['']).map(
+                                          (_: string, colIndex: number) => {
+                                            const cellContent = row?.[colIndex] || '';
+                                            // Check if content has newlines (bullet points)
+                                            const hasNewlines = cellContent.includes('\n');
+                                            
+                                            return (
+                                              <td
+                                                key={colIndex}
+                                                className="px-4 py-3 border-b border-secondary/10 text-sm text-foreground"
+                                              >
+                                                {hasNewlines ? (
+                                                  <ul className="list-none space-y-1">
+                                                    {cellContent
+                                                      .split('\n')
+                                                      .filter((line: string) => line.trim())
+                                                      .map((line: string, lineIdx: number) => {
+                                                        // Remove existing bullet symbols if present
+                                                        const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
+                                                        return (
+                                                          <li key={lineIdx} className="flex items-start text-sm">
+                                                            <span className="text-secondary mr-2">•</span>
+                                                            <span>{cleanLine}</span>
+                                                          </li>
+                                                        );
+                                                      })}
+                                                  </ul>
+                                                ) : (
+                                                  <span>{cellContent}</span>
+                                                )}
+                                              </td>
+                                            );
+                                          },
+                                        )}
+                                      </tr>
+                                    ),
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
                         </div>
+                      )}
+                      
+                      {/* Buttons */}
+                      <div className="flex gap-3 justify-center">
+                        <Button asChild className="group">
+                          <Link
+                            href={product.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Learn More
+                            <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                          </Link>
+                        </Button>
+                        <Button variant="outline" asChild className="group">
+                          <Link href={`/principal-products/${product.slug}`}>
+                            View Details
+                            <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+                          </Link>
+                        </Button>
                       </div>
                     </div>
                   </ScrollReveal>
