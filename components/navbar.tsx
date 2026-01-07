@@ -28,7 +28,6 @@ const navItems = [
     href: '/products',
     dropdown: true,
     items: [
-      { name: 'All Products', href: '/products' },
       { name: 'Our Solutions', href: '/solutions' },
       { name: 'Principal Products', href: '/principal-products' },
       { name: 'System Integrator', href: '/system-integrator' },
