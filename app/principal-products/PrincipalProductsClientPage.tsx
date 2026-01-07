@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
@@ -15,11 +16,43 @@ export default function PrincipalProductsClientPage() {
 
   const principalProducts = principalProductsData?.principalProducts || [];
 
+  useEffect(() => {
+    // Hide scrollbar but keep scrolling functionality
+    const originalBodyOverflowX = document.body.style.overflowX;
+    const originalHtmlOverflowX = document.documentElement.style.overflowX;
+    
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+    
+    // Hide scrollbar for webkit browsers
+    const style = document.createElement('style');
+    style.id = 'hide-scrollbar-style';
+    style.textContent = `
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.body.style.overflowX = originalBodyOverflowX;
+      document.documentElement.style.overflowX = originalHtmlOverflowX;
+      const styleElement = document.getElementById('hide-scrollbar-style');
+      if (styleElement) {
+        document.head.removeChild(styleElement);
+      }
+    };
+  }, []);
+
   return (
-    <>
+    <div className="overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative w-full py-24 bg-gradient-to-br from-primary/20 to-secondary/20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-8 md:px-12 lg:px-16">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
               Principal Products
@@ -33,8 +66,8 @@ export default function PrincipalProductsClientPage() {
       </section>
 
       {/* Principal Products Overview */}
-      <section className="w-full py-20 bg-card">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-12 bg-card">
+        <div className="container mx-auto px-8 md:px-12 lg:px-16">
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
@@ -45,7 +78,7 @@ export default function PrincipalProductsClientPage() {
               </div>
             </div>
           ) : principalProducts.length > 0 ? (
-            <div className="space-y-24">
+            <div className="space-y-12">
               {principalProducts.map((product, index) => (
                 <div
                   key={product.id}
@@ -53,14 +86,14 @@ export default function PrincipalProductsClientPage() {
                   className="scroll-mt-20"
                 >
                   <ScrollReveal direction="left">
-                    <div className="space-y-8">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                         {/* Left: Title & Image */}
-                        <div className="flex flex-col gap-6 items-center lg:items-start">
-                          <h3 className="text-2xl md:text-3xl font-bold text-primary text-center lg:text-left">
+                        <div className="flex flex-col gap-4 items-center lg:items-start">
+                          <h3 className="text-xl md:text-2xl font-bold text-primary text-center lg:text-left">
                             {product.title}
                           </h3>
-                          <div className="relative h-80 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
+                          <div className="relative h-64 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
                             <Image
                               src={product.imagePath || '/placeholder.svg'}
                               alt={product.title}
@@ -70,76 +103,12 @@ export default function PrincipalProductsClientPage() {
                           </div>
                         </div>
 
-                        {/* Right: Product Range Overview Table (first 3 rows) */}
-                        {product.productRangeOverview && 
-                         (product.productRangeOverview.headers?.length > 0 || product.productRangeOverview.rows?.length > 0) && (
-                          <div>
-                            <h4 className="text-xl font-semibold text-primary mb-4 text-center lg:text-left">
-                              Product Range Overview
-                            </h4>
-                            <div className="bg-card rounded-xl shadow-lg p-4 border-2 border-secondary/30">
-                              <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-background">
-                                <table className="w-full border-collapse">
-                                  <thead>
-                                    <tr>
-                                      {(product.productRangeOverview.headers || []).map(
-                                        (header: string, idx: number) => (
-                                          <th
-                                            key={idx}
-                                            className="px-4 py-3 border-b-2 border-secondary/30 text-left text-sm font-semibold text-secondary bg-secondary/10"
-                                          >
-                                            {header}
-                                          </th>
-                                        ),
-                                      )}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {(product.productRangeOverview.rows || [])
-                                      .slice(0, 3)
-                                      .map((row: string[], rowIndex: number) => (
-                                        <tr
-                                          key={rowIndex}
-                                          className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
-                                        >
-                                          {(product.productRangeOverview.headers || ['']).map(
-                                            (_: string, colIndex: number) => {
-                                              const cellContent = row?.[colIndex] || '';
-                                              const hasNewlines = cellContent.includes('\n');
-                                              
-                                              return (
-                                                <td
-                                                  key={colIndex}
-                                                  className="px-4 py-3 border-b border-secondary/10 text-sm text-foreground"
-                                                >
-                                                  {hasNewlines ? (
-                                                    <ul className="list-none space-y-1">
-                                                      {cellContent
-                                                        .split('\n')
-                                                        .filter((line: string) => line.trim())
-                                                        .map((line: string, lineIdx: number) => {
-                                                          const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
-                                                          return (
-                                                            <li key={lineIdx} className="flex items-start text-sm">
-                                                              <span className="text-secondary mr-2">•</span>
-                                                              <span>{cleanLine}</span>
-                                                            </li>
-                                                          );
-                                                        })}
-                                                    </ul>
-                                                  ) : (
-                                                    <span>{cellContent}</span>
-                                                  )}
-                                                </td>
-                                              );
-                                            },
-                                          )}
-                                        </tr>
-                                      ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
+                        {/* Right: Description (6 lines) */}
+                        {product.description && (
+                          <div className="flex flex-col justify-start mt-16 lg:mt-24 -ml-8 lg:-ml-16">
+                            <p className="text-muted-foreground leading-relaxed line-clamp-6 text-base">
+                              {product.description}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -183,7 +152,7 @@ export default function PrincipalProductsClientPage() {
 
       {/* Key Benefits */}
       <section className="w-full py-20 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-8 md:px-12 lg:px-16">
           <ScrollReveal>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
@@ -244,7 +213,7 @@ export default function PrincipalProductsClientPage() {
 
       {/* CTA Section */}
       <section className="w-full py-20 bg-gradient-to-br from-primary/20 to-secondary/20">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-8 md:px-12 lg:px-16 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
             Interested in Our Principal Products?
           </h2>
@@ -260,6 +229,6 @@ export default function PrincipalProductsClientPage() {
           </Button>
         </div>
       </section>
-    </>
+    </div>
   );
 }
