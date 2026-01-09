@@ -67,7 +67,7 @@ export default function PrincipalProductsClientPage() {
 
       {/* Principal Products Overview */}
       <section className="w-full py-12 bg-card">
-        <div className="container mx-auto px-8 md:px-12 lg:px-16">
+        <div className="container mx-auto px-0 pl-4">
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
@@ -87,9 +87,9 @@ export default function PrincipalProductsClientPage() {
                 >
                   <ScrollReveal direction="left">
                     <div className="space-y-6">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
                         {/* Left: Title & Image */}
-                        <div className="flex flex-col gap-4 items-center lg:items-start">
+                        <div className="flex flex-col gap-4 items-center lg:items-start lg:col-span-2">
                           <h3 className="text-xl md:text-2xl font-bold text-primary text-center lg:text-left">
                             {product.title}
                           </h3>
@@ -105,7 +105,7 @@ export default function PrincipalProductsClientPage() {
 
                         {/* Right: Description (6 lines) */}
                         {/* Right: Description & Table */}
-                        <div className="flex flex-col justify-start mt-8 lg:mt-0">
+                        <div className="flex flex-col justify-start mt-8 lg:mt-0 lg:col-span-3">
                           {product.productRangeOverview &&
                             product.productRangeOverview.headers &&
                             product.productRangeOverview.headers.length > 0 && (
@@ -143,8 +143,15 @@ export default function PrincipalProductsClientPage() {
                                               const isColVisible = product.productRangeOverview?.columnVisibility?.[j] !== false;
                                               if (!isColVisible) return null;
 
+                                              // Check if this is the first visible column
+                                              const visibleColumns = row.map((_, idx) =>
+                                                product.productRangeOverview?.columnVisibility?.[idx] !== false
+                                              );
+                                              const firstVisibleIndex = visibleColumns.indexOf(true);
+                                              const isFirstColumn = j === firstVisibleIndex;
+
                                               return (
-                                                <td key={j} className="px-4 py-3 text-gray-600">
+                                                <td key={j} className={`px-4 py-3 text-gray-600 ${isFirstColumn ? 'font-bold' : ''}`}>
                                                   {cell}
                                                 </td>
                                               );
