@@ -20,10 +20,10 @@ export default function PrincipalProductsClientPage() {
     // Hide scrollbar but keep scrolling functionality
     const originalBodyOverflowX = document.body.style.overflowX;
     const originalHtmlOverflowX = document.documentElement.style.overflowX;
-    
+
     document.body.style.overflowX = 'hidden';
     document.documentElement.style.overflowX = 'hidden';
-    
+
     // Hide scrollbar for webkit browsers
     const style = document.createElement('style');
     style.id = 'hide-scrollbar-style';
@@ -93,7 +93,7 @@ export default function PrincipalProductsClientPage() {
                           <h3 className="text-xl md:text-2xl font-bold text-primary text-center lg:text-left">
                             {product.title}
                           </h3>
-                          <div className="relative h-64 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center">
+                          <div className="relative h-64 w-full max-w-md rounded-xl overflow-hidden shadow-lg bg-gray-100 flex items-center justify-center border-2 border-primary">
                             <Image
                               src={product.imagePath || '/placeholder.svg'}
                               alt={product.title}
@@ -104,13 +104,60 @@ export default function PrincipalProductsClientPage() {
                         </div>
 
                         {/* Right: Description (6 lines) */}
-                        {product.description && (
-                          <div className="flex flex-col justify-start mt-16 lg:mt-24 -ml-8 lg:-ml-16">
-                            <p className="text-muted-foreground leading-relaxed line-clamp-6 text-base">
-                              {product.description}
-                            </p>
-                          </div>
-                        )}
+                        {/* Right: Description & Table */}
+                        <div className="flex flex-col justify-start mt-8 lg:mt-0">
+                          {product.productRangeOverview &&
+                            product.productRangeOverview.headers &&
+                            product.productRangeOverview.headers.length > 0 && (
+                              <div className="w-full overflow-hidden rounded-lg border bg-white shadow-sm">
+                                <h4 className="border-b bg-gray-50 px-4 py-3 font-semibold text-gray-900">
+                                  Product Range Overview
+                                </h4>
+                                <div className="overflow-x-auto">
+                                  <table className="w-full text-sm text-left">
+                                    <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+                                      <tr>
+                                        {product.productRangeOverview.headers.map((header, i) => {
+                                          // Check if column is visible (default to true if undefined)
+                                          const isVisible = product.productRangeOverview?.columnVisibility?.[i] !== false;
+                                          if (!isVisible) return null;
+
+                                          return (
+                                            <th key={i} className="px-4 py-3 font-semibold">
+                                              {header}
+                                            </th>
+                                          );
+                                        })}
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200">
+                                      {product.productRangeOverview.rows.map((row, i) => {
+                                        // Check if row is visible (default to true if undefined)
+                                        const isRowVisible = product.productRangeOverview?.rowVisibility?.[i] !== false;
+                                        if (!isRowVisible) return null;
+
+                                        return (
+                                          <tr key={i} className="hover:bg-gray-50">
+                                            {row.map((cell, j) => {
+                                              // Check if column is visible
+                                              const isColVisible = product.productRangeOverview?.columnVisibility?.[j] !== false;
+                                              if (!isColVisible) return null;
+
+                                              return (
+                                                <td key={j} className="px-4 py-3 text-gray-600">
+                                                  {cell}
+                                                </td>
+                                              );
+                                            })}
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            )}
+                        </div>
                       </div>
 
                       {/* Buttons */}

@@ -42,6 +42,8 @@ const productSchema = z.object({
 const productRangeOverviewTableSchema = z.object({
   headers: z.array(z.string()).default([]),
   rows: z.array(z.array(z.string())).default([]),
+  columnVisibility: z.array(z.boolean()).optional().default([]),
+  rowVisibility: z.array(z.boolean()).optional().default([]),
 });
 
 const principalProductUpdateSchema = z.object({
@@ -67,10 +69,10 @@ export async function GET(
     });
 
     if (!principalProduct) {
-    return NextResponse.json(
-      { success: false, error: 'Principal product not found' },
-      { status: 404 },
-    );
+      return NextResponse.json(
+        { success: false, error: 'Principal product not found' },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({

@@ -133,7 +133,7 @@ export default function ProductPage({ params }: Props) {
                     </Link>
                   </Button>
                 </div>
-
+                
                 {/* Title & Subtitle */}
                 <div className="text-center mb-12">
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4">
@@ -150,21 +150,21 @@ export default function ProductPage({ params }: Props) {
                 {currentProduct.images && currentProduct.images.length > 0 && (
                   <div className="flex justify-center">
                     <div className="relative h-64 w-full max-w-lg rounded-xl overflow-hidden shadow-lg bg-background border-2 border-secondary/30 flex items-center justify-center">
-                      <Image
-                        src={currentProduct.images[0]}
-                        alt={currentProduct.title || 'Master product'}
-                        fill
-                        className="object-contain p-4"
-                      />
-                    </div>
+                        <Image
+                          src={currentProduct.images[0]}
+                          alt={currentProduct.title || 'Master product'}
+                          fill
+                          className="object-contain p-4"
+                        />
+                      </div>
                   </div>
                 )}
               </ScrollReveal>
             </div>
-          </div>
+                    </div>
         </section>
       )}
-
+                    
       {/* Section 2: Key Features */}
       {currentProduct && currentProduct.keyFeatures && currentProduct.keyFeatures.length > 0 && (
         <section className="w-full py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -176,14 +176,14 @@ export default function ProductPage({ params }: Props) {
                 </h2>
                 <div className="bg-card rounded-xl shadow-lg p-8 border-2 border-secondary/30">
                   <ul className="space-y-4">
-                    {currentProduct.keyFeatures.map((feature: string, idx: number) => (
+                          {currentProduct.keyFeatures.map((feature: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-4 text-foreground">
                         <span className="text-secondary font-bold text-xl mt-1 flex-shrink-0">✓</span>
                         <span className="text-lg">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
               </div>
             </ScrollReveal>
           </div>
@@ -301,9 +301,9 @@ export default function ProductPage({ params }: Props) {
                     </div>
                   );
                 })}
-              </div>
-            </ScrollReveal>
-          </div>
+                </div>
+              </ScrollReveal>
+            </div>
         </section>
       )}
 
@@ -335,89 +335,89 @@ export default function ProductPage({ params }: Props) {
       {/* Section 7: User Products */}
       {currentProduct && (
         <section className="w-full py-20 bg-background border-t-2 border-secondary/30">
-          <div className="container mx-auto px-4">
-            <ScrollReveal>
+        <div className="container mx-auto px-4">
+          <ScrollReveal>
               <div className="max-w-7xl mx-auto">
-                {/* Section Header */}
-                <div className="text-center mb-16">
+            {/* Section Header */}
+            <div className="text-center mb-16">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">
                     User Products
                   </h2>
                   <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                     Explore our comprehensive range of user products and solutions
-                  </p>
-                </div>
+              </p>
+            </div>
 
-                {/* User Products Cards */}
-                {currentProduct.userProducts && currentProduct.userProducts.length > 0 ? (
+            {/* User Products Cards */}
+            {currentProduct.userProducts && currentProduct.userProducts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {currentProduct.userProducts.map((userProduct: any, index: number) => (
-                      <Card 
-                        key={index} 
+                  {currentProduct.userProducts.map((userProduct: any, index: number) => (
+                    <Card 
+                      key={index} 
                         className="bg-card border-2 border-secondary/30 hover:border-secondary hover:shadow-xl hover:shadow-secondary/20 transition-all duration-300 h-full flex flex-col overflow-hidden"
-                      >
-                        <CardContent className="p-0 flex flex-col h-full">
-                          {/* Top section with title and image */}
+                    >
+                      <CardContent className="p-0 flex flex-col h-full">
+                        {/* Top section with title and image */}
                           <div className="bg-card border-b border-secondary/20">
-                            {/* User Product Title */}
-                            <div className="px-6 pt-6 pb-4">
+                          {/* User Product Title */}
+                          <div className="px-6 pt-6 pb-4">
                               <h3 className="text-2xl font-bold text-primary">
-                                {userProduct.title || `User Product ${index + 1}`}
-                              </h3>
-                            </div>
+                              {userProduct.title || `User Product ${index + 1}`}
+                            </h3>
+                          </div>
 
-                            {/* Product Image */}
-                            {userProduct.images && userProduct.images.length > 0 ? (
-                              <div className="relative w-full aspect-video">
-                                <Image
-                                  src={userProduct.images[0]}
-                                  alt={userProduct.title || `User product ${index + 1}`}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            ) : (
+                          {/* Product Image */}
+                          {userProduct.images && userProduct.images.length > 0 ? (
+                            <div className="relative w-full aspect-video">
+                              <Image
+                                src={userProduct.images[0]}
+                                alt={userProduct.title || `User product ${index + 1}`}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                          ) : (
                               <div className="w-full aspect-video bg-muted flex items-center justify-center border-b border-secondary/20">
                                 <span className="text-muted-foreground">No image available</span>
-                              </div>
-                            )}
+                            </div>
+                          )}
 
-                            {/* Subtitle */}
-                            {userProduct.subtitle && (
+                          {/* Subtitle */}
+                          {userProduct.subtitle && (
                               <div className="px-6 py-4 border-b border-secondary/20">
                                 <p className="text-muted-foreground text-sm">{userProduct.subtitle}</p>
-                              </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
+                        </div>
 
-                          {/* View Details Button - Always at bottom */}
-                          <div className="p-6 mt-auto">
-                            <Button 
-                              asChild 
+                        {/* View Details Button - Always at bottom */}
+                        <div className="p-6 mt-auto">
+                          <Button 
+                            asChild 
                               className="w-full font-semibold transition-colors"
+                          >
+                            <Link 
+                              href={`/principal-products/${params.slug}/products/${params.productSlug}/view-details/${userProduct.slug || `user-product-${index}`}`}
                             >
-                              <Link 
-                                href={`/principal-products/${params.slug}/products/${params.productSlug}/view-details/${userProduct.slug || `user-product-${index}`}`}
-                              >
-                                View Details
-                                <ChevronRight className="ml-2 h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
+                              View Details
+                              <ChevronRight className="ml-2 h-4 w-4" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+            ) : (
                   <div className="bg-card border-2 border-secondary/30 rounded-xl shadow-lg p-12 text-center">
                     <p className="text-muted-foreground text-lg mb-4">No user products available for this master product.</p>
                     <p className="text-muted-foreground/70 text-sm">User products will appear here once they are created by the admin.</p>
                   </div>
                 )}
               </div>
-            </ScrollReveal>
-          </div>
-        </section>
+          </ScrollReveal>
+        </div>
+      </section>
       )}
     </div>
   );

@@ -32,7 +32,7 @@ interface Props {
 
 export function EnhancedPrincipalProductForm(props: Props) {
   const [showProductForm, setShowProductForm] = useState(false);
-  
+
   const form = useForm<z.infer<typeof principalProductInsertSchema>>({
     resolver: zodResolver(principalProductInsertSchema),
     defaultValues: {
@@ -45,6 +45,8 @@ export function EnhancedPrincipalProductForm(props: Props) {
       productRangeOverview: {
         headers: [],
         rows: [],
+        columnVisibility: [],
+        rowVisibility: [],
       },
       products: [],
       ...props.data,
@@ -95,19 +97,19 @@ export function EnhancedPrincipalProductForm(props: Props) {
   // Generate master product slugs
   useEffect(() => {
     if (!productsValue || !Array.isArray(productsValue)) return;
-    
+
     productsValue.forEach((product, productIndex) => {
       if (product.title && product.title.trim()) {
         const masterSlug = generateSlug(product.title);
         const currentSlug = form.getValues(`products.${productIndex}.slug`);
-        
+
         console.log(`🔍 Master Product Check [${productIndex}]:`, {
           title: product.title,
           generatedSlug: masterSlug,
           currentSlug: currentSlug,
           willUpdate: currentSlug !== masterSlug,
         });
-        
+
         if (currentSlug !== masterSlug) {
           console.log(`✅ Setting master slug: "${masterSlug}" ← "${product.title}"`);
           form.setValue(`products.${productIndex}.slug`, masterSlug, { shouldValidate: false, shouldDirty: true });
@@ -119,24 +121,24 @@ export function EnhancedPrincipalProductForm(props: Props) {
   // Generate user product slugs
   useEffect(() => {
     if (!productsValue || !Array.isArray(productsValue)) return;
-    
+
     productsValue.forEach((product, productIndex) => {
       if (!product.userProducts || !Array.isArray(product.userProducts)) return;
-      
+
       product.userProducts.forEach((userProduct, userProductIndex) => {
         if (userProduct.title && userProduct.title.trim()) {
           const userSlug = generateSlug(userProduct.title);
           const currentSlug = form.getValues(
             `products.${productIndex}.userProducts.${userProductIndex}.slug`
           );
-          
+
           console.log(`🔍 User Product Check [${productIndex}][${userProductIndex}]:`, {
             title: userProduct.title,
             generatedSlug: userSlug,
             currentSlug: currentSlug,
             willUpdate: currentSlug !== userSlug,
           });
-          
+
           if (currentSlug !== userSlug) {
             console.log(`✅ Setting user product slug: "${userSlug}" ← "${userProduct.title}"`);
             form.setValue(
@@ -177,7 +179,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
     if (data.products && Array.isArray(data.products)) {
       data.products = data.products.map((product, idx) => {
         const productSlug = product.slug || generateSlug(product.title || `product-${idx}`);
-        
+
         // Filter out empty custom sections and empty descriptions
         const validCustomSections = (product.customSections || [])
           .map((section: any) => {
@@ -191,13 +193,13 @@ export function EnhancedPrincipalProductForm(props: Props) {
             };
           })
           .filter(
-            (section: any) => 
-              section.title && 
-              section.title.trim() && 
-              section.descriptions && 
+            (section: any) =>
+              section.title &&
+              section.title.trim() &&
+              section.descriptions &&
               section.descriptions.length > 0
           );
-        
+
         return {
           ...product,
           slug: productSlug,
@@ -380,18 +382,40 @@ export function EnhancedPrincipalProductForm(props: Props) {
                 control={form.control}
                 name="productRangeOverview"
                 render={({ field }) => {
-                  const tableData = field.value || { headers: [], rows: [] };
-                  
+                  const tableData = field.value || { headers: [], rows: [], columnVisibility: [], rowVisibility: [] };
+
+                  // Ensure visibility arrays exist and match lengths
+                  if (!tableData.columnVisibility) {
+                    tableData.columnVisibility = new Array(tableData.headers?.length || 0).fill(true);
+                  }
+                  if (!tableData.rowVisibility) {
+                    tableData.rowVisibility = new Array(tableData.rows?.length || 0).fill(true);
+                  }
+
                   const addColumn = () => {
                     const newHeaders = [...(tableData.headers || []), ''];
                     const newRows = (tableData.rows || []).map(row => [...row, '']);
-                    field.onChange({ headers: newHeaders, rows: newRows });
+                    const newColVisibility = [...(tableData.columnVisibility || []), true];
+
+                    field.onChange({
+                      headers: newHeaders,
+                      rows: newRows,
+                      columnVisibility: newColVisibility,
+                      rowVisibility: tableData.rowVisibility
+                    });
                   };
 
                   const removeColumn = (colIndex: number) => {
                     const newHeaders = tableData.headers.filter((_, i) => i !== colIndex);
                     const newRows = (tableData.rows || []).map(row => row.filter((_, i) => i !== colIndex));
-                    field.onChange({ headers: newHeaders, rows: newRows });
+                    const newColVisibility = (tableData.columnVisibility || []).filter((_, i) => i !== colIndex);
+
+                    field.onChange({
+                      headers: newHeaders,
+                      rows: newRows,
+                      columnVisibility: newColVisibility,
+                      rowVisibility: tableData.rowVisibility
+                    });
                   };
 
                   const updateHeader = (colIndex: number, value: string) => {
@@ -400,18 +424,39 @@ export function EnhancedPrincipalProductForm(props: Props) {
                     field.onChange({ ...tableData, headers: newHeaders });
                   };
 
+                  const toggleColumnVisibility = (colIndex: number) => {
+                    const newColVisibility = [...(tableData.columnVisibility || [])];
+                    // Ensure array is long enough if it was missing
+                    while (newColVisibility.length <= colIndex) newColVisibility.push(true);
+
+                    // If undefined, it defaults to true, so we want to toggle current effective state
+                    const currentVal = newColVisibility[colIndex] !== false;
+                    newColVisibility[colIndex] = !currentVal;
+
+                    field.onChange({ ...tableData, columnVisibility: newColVisibility });
+                  };
+
                   const addRow = () => {
                     const columnCount = (tableData.headers || []).length || 1;
                     const newRow = Array(columnCount).fill('');
+                    const newRowVisibility = [...(tableData.rowVisibility || []), true];
+
                     field.onChange({
                       ...tableData,
                       rows: [...(tableData.rows || []), newRow],
+                      rowVisibility: newRowVisibility
                     });
                   };
 
                   const removeRow = (rowIndex: number) => {
                     const newRows = (tableData.rows || []).filter((_, i) => i !== rowIndex);
-                    field.onChange({ ...tableData, rows: newRows });
+                    const newRowVisibility = (tableData.rowVisibility || []).filter((_, i) => i !== rowIndex);
+
+                    field.onChange({
+                      ...tableData,
+                      rows: newRows,
+                      rowVisibility: newRowVisibility
+                    });
                   };
 
                   const updateCell = (rowIndex: number, colIndex: number, value: string) => {
@@ -421,6 +466,17 @@ export function EnhancedPrincipalProductForm(props: Props) {
                     }
                     newRows[rowIndex][colIndex] = value;
                     field.onChange({ ...tableData, rows: newRows });
+                  };
+
+                  const toggleRowVisibility = (rowIndex: number) => {
+                    const newRowVisibility = [...(tableData.rowVisibility || [])];
+                    // Ensure array is long enough
+                    while (newRowVisibility.length <= rowIndex) newRowVisibility.push(true);
+
+                    const currentVal = newRowVisibility[rowIndex] !== false;
+                    newRowVisibility[rowIndex] = !currentVal;
+
+                    field.onChange({ ...tableData, rowVisibility: newRowVisibility });
                   };
 
                   return (
@@ -451,30 +507,45 @@ export function EnhancedPrincipalProductForm(props: Props) {
                           </div>
 
                           {/* Table */}
-                          {(tableData.headers && tableData.headers.length > 0) || 
-                           (tableData.rows && tableData.rows.length > 0) ? (
+                          {(tableData.headers && tableData.headers.length > 0) ||
+                            (tableData.rows && tableData.rows.length > 0) ? (
                             <div className="overflow-x-auto">
                               <table className="w-full border-collapse border border-secondary/30">
                                 <thead>
                                   <tr>
+                                    <th className="border border-secondary/30 p-2 bg-card w-12 text-center text-xs text-muted-foreground">
+                                      Pub
+                                    </th>
                                     {(tableData.headers || []).map((header, colIndex) => (
                                       <th key={colIndex} className="border border-secondary/30 p-2 bg-card">
-                                        <div className="flex items-center gap-2">
-                                          <Input
-                                            placeholder={`Column ${colIndex + 1}`}
-                                            value={header}
-                                            onChange={(e) => updateHeader(colIndex, e.target.value)}
-                                            className="border-secondary/50"
-                                          />
-                                          <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => removeColumn(colIndex)}
-                                            className="text-destructive hover:text-destructive h-6 w-6 p-0"
-                                          >
-                                            <X className="h-3 w-3" />
-                                          </Button>
+                                        <div className="flex flex-col gap-2">
+                                          <div className="flex justify-center items-center gap-2 mb-1">
+                                            <input
+                                              type="checkbox"
+                                              checked={tableData.columnVisibility?.[colIndex] !== false}
+                                              onChange={() => toggleColumnVisibility(colIndex)}
+                                              className="h-4 w-4 rounded border-gray-300 text-primary"
+                                              title="Toggle Column Visibility"
+                                            />
+                                            <span className="text-xs text-muted-foreground">Show Column</span>
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            <Input
+                                              placeholder={`Column ${colIndex + 1}`}
+                                              value={header}
+                                              onChange={(e) => updateHeader(colIndex, e.target.value)}
+                                              className={`border-secondary/50 ${tableData.columnVisibility?.[colIndex] === false ? 'opacity-50' : ''}`}
+                                            />
+                                            <Button
+                                              type="button"
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() => removeColumn(colIndex)}
+                                              className="text-destructive hover:text-destructive h-6 w-6 p-0"
+                                            >
+                                              <X className="h-3 w-3" />
+                                            </Button>
+                                          </div>
                                         </div>
                                       </th>
                                     ))}
@@ -482,20 +553,29 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                 </thead>
                                 <tbody>
                                   {(tableData.rows || []).map((row, rowIndex) => (
-                                    <tr key={rowIndex}>
+                                    <tr key={rowIndex} className={tableData.rowVisibility?.[rowIndex] === false ? 'bg-muted/50' : ''}>
+                                      <td className="border border-secondary/30 p-2 text-center align-top pt-4">
+                                        <div className="flex flex-col items-center gap-1">
+                                          <input
+                                            type="checkbox"
+                                            checked={tableData.rowVisibility?.[rowIndex] !== false}
+                                            onChange={() => toggleRowVisibility(rowIndex)}
+                                            className="h-4 w-4 rounded border-gray-300 text-primary"
+                                            title="Toggle Row Visibility"
+                                          />
+                                          {/* <span className="text-[10px] text-muted-foreground">Row</span> */}
+                                        </div>
+                                      </td>
                                       {(tableData.headers || ['']).map((_, colIndex) => (
-                                        <td key={colIndex} className="border border-secondary/30 p-2">
+                                        <td key={colIndex} className={`border border-secondary/30 p-2 ${tableData.columnVisibility?.[colIndex] === false ? 'bg-muted/30' : ''}`}>
                                           <div className="space-y-1">
                                             <Textarea
-                                              placeholder={`Enter content...\nFor bullet points, enter one per line:\n• Item 1\n• Item 2`}
+                                              placeholder={`Enter content...`}
                                               value={row[colIndex] || ''}
                                               onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                                              className="border-secondary/50 min-h-[100px] text-sm"
+                                              className={`border-secondary/50 min-h-[100px] text-sm ${(tableData.columnVisibility?.[colIndex] === false || tableData.rowVisibility?.[rowIndex] === false) ? 'opacity-50' : ''}`}
                                               rows={4}
                                             />
-                                            <p className="text-xs text-muted-foreground">
-                                              💡 Tip: Enter one bullet point per line. Use "•" or "-" for bullets.
-                                            </p>
                                           </div>
                                         </td>
                                       ))}
@@ -522,67 +602,73 @@ export function EnhancedPrincipalProductForm(props: Props) {
                           )}
 
                           {/* Preview Section */}
-                          {(tableData.headers && tableData.headers.length > 0) && 
-                           (tableData.rows && tableData.rows.length > 0) && (
-                            <div className="mt-6 border-2 border-secondary/30 rounded-lg p-4 bg-muted/30">
-                              <h4 className="text-sm font-semibold text-secondary mb-3">Preview</h4>
-                              <div className="overflow-x-auto">
-                                <table className="w-full border-collapse border border-secondary/20 bg-background text-sm">
-                                  <thead>
-                                    <tr>
-                                      {tableData.headers.map((header, colIndex) => (
-                                        <th
-                                          key={colIndex}
-                                          className="px-3 py-2 border border-secondary/20 text-left font-semibold text-secondary bg-secondary/10"
-                                        >
-                                          {header || `Column ${colIndex + 1}`}
-                                        </th>
-                                      ))}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {tableData.rows.map((row, rowIndex) => (
-                                      <tr
-                                        key={rowIndex}
-                                        className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
-                                      >
-                                        {(tableData.headers || ['']).map((_, colIndex) => {
-                                          const cellContent = row[colIndex] || '';
-                                          const hasNewlines = cellContent.includes('\n');
-                                          
-                                          return (
-                                            <td
+                          {(tableData.headers && tableData.headers.length > 0) &&
+                            (tableData.rows && tableData.rows.length > 0) && (
+                              <div className="mt-6 border-2 border-secondary/30 rounded-lg p-4 bg-muted/30">
+                                <h4 className="text-sm font-semibold text-secondary mb-3">Preview (Visible Only)</h4>
+                                <div className="overflow-x-auto">
+                                  <table className="w-full border-collapse border border-secondary/20 bg-background text-sm">
+                                    <thead>
+                                      <tr>
+                                        {tableData.headers.map((header, colIndex) => (
+                                          tableData.columnVisibility?.[colIndex] !== false && (
+                                            <th
                                               key={colIndex}
-                                              className="px-3 py-2 border border-secondary/10 text-foreground"
+                                              className="px-3 py-2 border border-secondary/20 text-left font-semibold text-secondary bg-secondary/10"
                                             >
-                                              {hasNewlines ? (
-                                                <ul className="list-none space-y-1">
-                                                  {cellContent
-                                                    .split('\n')
-                                                    .filter(line => line.trim())
-                                                    .map((line, lineIdx) => {
-                                                      const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
-                                                      return (
-                                                        <li key={lineIdx} className="flex items-start">
-                                                          <span className="text-secondary mr-2">•</span>
-                                                          <span>{cleanLine}</span>
-                                                        </li>
-                                                      );
-                                                    })}
-                                                </ul>
-                                              ) : (
-                                                <span>{cellContent || '-'}</span>
-                                              )}
-                                            </td>
-                                          );
-                                        })}
+                                              {header || `Column ${colIndex + 1}`}
+                                            </th>
+                                          )
+                                        ))}
                                       </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
+                                    </thead>
+                                    <tbody>
+                                      {tableData.rows.map((row, rowIndex) => (
+                                        tableData.rowVisibility?.[rowIndex] !== false && (
+                                          <tr
+                                            key={rowIndex}
+                                            className={rowIndex % 2 === 0 ? 'bg-card' : 'bg-background'}
+                                          >
+                                            {(tableData.headers || ['']).map((_, colIndex) => {
+                                              if (tableData.columnVisibility?.[colIndex] === false) return null;
+
+                                              const cellContent = row[colIndex] || '';
+                                              const hasNewlines = cellContent.includes('\n');
+
+                                              return (
+                                                <td
+                                                  key={colIndex}
+                                                  className="px-3 py-2 border border-secondary/10 text-foreground"
+                                                >
+                                                  {hasNewlines ? (
+                                                    <ul className="list-none space-y-1">
+                                                      {cellContent
+                                                        .split('\n')
+                                                        .filter(line => line.trim())
+                                                        .map((line, lineIdx) => {
+                                                          const cleanLine = line.trim().replace(/^[•\-\*]\s*/, '');
+                                                          return (
+                                                            <li key={lineIdx} className="flex items-start">
+                                                              <span className="text-secondary mr-2">•</span>
+                                                              <span>{cleanLine}</span>
+                                                            </li>
+                                                          );
+                                                        })}
+                                                    </ul>
+                                                  ) : (
+                                                    <span>{cellContent || '-'}</span>
+                                                  )}
+                                                </td>
+                                              );
+                                            })}
+                                          </tr>
+                                        )
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -700,7 +786,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
                         name={`products.${index}.slug`}
                         render={({ field }) => {
                           console.log(`🔍 Rendering Master Slug Field [${index}]:`, field.value);
-                          
+
                           return (
                             <FormItem>
                               <FormLabel>Master Product Slug (Auto-generated)</FormLabel>
@@ -714,10 +800,10 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                       <span className="text-lg text-green-500 font-bold">✓</span>
                                     </div>
                                   ) : (
-                                    <Input 
-                                      placeholder="Slug will appear here after entering title..." 
+                                    <Input
+                                      placeholder="Slug will appear here after entering title..."
                                       value=""
-                                      readOnly 
+                                      readOnly
                                       className="bg-gray-800 border-gray-700 text-gray-500"
                                       disabled
                                     />
@@ -736,12 +822,12 @@ export function EnhancedPrincipalProductForm(props: Props) {
                         }}
                       />
 
-                        <FormField
-                          control={form.control}
-                          name={`products.${index}.images`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Master Product Images (Max 2)</FormLabel>
+                      <FormField
+                        control={form.control}
+                        name={`products.${index}.images`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Master Product Images (Max 2)</FormLabel>
                             <FormControl>
                               <div className="space-y-4">
                                 <MediaUploader
@@ -954,7 +1040,7 @@ export function EnhancedPrincipalProductForm(props: Props) {
                                               field.onChange(newSections);
                                             }}
                                           />
-                                          
+
                                           {/* Multiple Descriptions */}
                                           <div className="space-y-2">
                                             <div className="flex items-center justify-between">
@@ -1418,17 +1504,19 @@ export function EnhancedPrincipalProductForm(props: Props) {
               ✅ Master Products Created Successfully!
             </h3>
             <p className="text-green-700 text-sm">
-              You have created {fields.length} master product{fields.length > 1 ? 's' : ''}. 
+              You have created {fields.length} master product{fields.length > 1 ? 's' : ''}.
               These will be displayed under the Admin Principal.
             </p>
           </div>
-          <ProductCards 
+          <ProductCards
             products={fields.map(field => ({
               id: field.id,
               title: field.title,
               subtitle: field.subtitle,
               images: field.images,
               keyFeatures: field.keyFeatures,
+              customSections: field.customSections || [],
+              primaryApplicationDomains: field.primaryApplicationDomains || [],
               userProducts: field.userProducts
             }))}
             principalProductSlug={form.watch('slug') || 'preview'}

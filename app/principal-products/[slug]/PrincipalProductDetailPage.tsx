@@ -87,7 +87,7 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                   </Link>
                 </Button>
               </div>
-
+              
               {/* Title & Image */}
               <div className="text-center">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-8">
@@ -123,8 +123,8 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                   <p className="text-muted-foreground max-w-2xl mx-auto">
                     Comprehensive overview of our product range and specifications.
                   </p>
-                </div>
-                
+                  </div>
+                  
                 <div className="bg-card rounded-xl shadow-lg p-6 border-2 border-secondary/30">
                   <div className="overflow-x-auto rounded-lg border border-secondary/20 bg-background">
                     <table className="w-full border-collapse">

@@ -43,6 +43,8 @@ const productSchema = z.object({
 const productRangeOverviewTableSchema = z.object({
   headers: z.array(z.string()).default([]),
   rows: z.array(z.array(z.string())).default([]),
+  columnVisibility: z.array(z.boolean()).optional().default([]),
+  rowVisibility: z.array(z.boolean()).optional().default([]),
 });
 
 const principalProductCreateSchema = z.object({
