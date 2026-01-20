@@ -52,6 +52,7 @@ export const principalProductInsertSchema = z.object({
   link: z.string().optional().default(''),
   keyFacts: z.array(z.string()).optional().default([]),
   productRangeOverview: productRangeOverviewTableSchema.optional(),
+  customSections: z.array(customSectionSchema).optional().default([]),
   products: z.array(productSchema).optional().default([]),
 });
 
@@ -64,6 +65,7 @@ export const principalProductSelectSchema = z.object({
   link: z.string(),
   keyFacts: z.array(z.string()).optional().default([]),
   productRangeOverview: productRangeOverviewTableSchema.optional(),
+  customSections: z.array(customSectionSchema).optional().default([]),
   products: z.array(productSchema).optional().default([]),
   createdAt: z.date(),
   updatedAt: z.date(),

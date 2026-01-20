@@ -134,6 +134,9 @@ model PrincipalProduct {
   /// Structured product range overview table (headers + rows)
   productRangeOverview Json?
 
+  /// Custom sections with title and descriptions, stored as JSON array
+  customSections Json[] @default([])
+
   /// Master products and user products, stored as JSON array
   products    Json[]   @default([])
   createdAt   DateTime @default(now())

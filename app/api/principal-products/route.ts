@@ -55,6 +55,7 @@ const principalProductCreateSchema = z.object({
   link: z.string().optional().default(''),
   keyFacts: z.array(z.string()).optional().default([]),
   productRangeOverview: productRangeOverviewTableSchema.optional(),
+  customSections: z.array(customSectionSchema).optional().default([]),
   products: z.array(productSchema).optional().default([]),
 });
 

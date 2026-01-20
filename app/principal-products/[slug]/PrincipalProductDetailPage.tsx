@@ -259,6 +259,53 @@ export default function PrincipalProductDetailPage({ slug }: Props) {
                   </div>
                 </div>
               )}
+
+              {/* Custom Sections */}
+              {currentProduct.customSections && 
+               Array.isArray(currentProduct.customSections) && 
+               currentProduct.customSections.length > 0 && (
+                <div className="mt-12 space-y-8">
+                  {currentProduct.customSections.map((section: any, sectionIndex: number) => {
+                    // Ensure section has title and descriptions
+                    if (!section.title || !section.descriptions || !Array.isArray(section.descriptions) || section.descriptions.length === 0) {
+                      return null;
+                    }
+
+                    return (
+                      <div key={sectionIndex} className="bg-card rounded-xl shadow-lg p-8 border-2 border-secondary/30">
+                        <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">
+                          {section.title}
+                        </h3>
+                        <div className="space-y-4">
+                          {section.descriptions.map((description: string, descIndex: number) => {
+                            if (!description || !description.trim()) return null;
+                            
+                            // Process bold formatting (**text**)
+                            const processedDescription = description
+                              .split(/(\*\*.*?\*\*)/g)
+                              .map((part: string, partIndex: number) => {
+                                if (part.startsWith('**') && part.endsWith('**')) {
+                                  const boldText = part.slice(2, -2);
+                                  return <strong key={partIndex} className="font-bold text-primary">{boldText}</strong>;
+                                }
+                                return <span key={partIndex}>{part}</span>;
+                              });
+
+                            return (
+                              <p 
+                                key={descIndex} 
+                                className="text-lg text-muted-foreground leading-relaxed"
+                              >
+                                {processedDescription}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </ScrollReveal>
         </div>

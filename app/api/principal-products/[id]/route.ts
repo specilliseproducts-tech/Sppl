@@ -54,6 +54,7 @@ const principalProductUpdateSchema = z.object({
   link: z.string().optional(),
   keyFacts: z.array(z.string()).optional(),
   productRangeOverview: productRangeOverviewTableSchema.optional(),
+  customSections: z.array(customSectionSchema).optional(),
   products: z.array(productSchema).optional(),
 });
 
